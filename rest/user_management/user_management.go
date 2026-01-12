@@ -9,9 +9,9 @@ import (
 	"sync"
 
 	"github.com/kweaver-ai/idrm-go-common/rest/base"
-	"github.com/kweaver-ai/idrm-go-common/rest/user_management/httpclient"
 	"github.com/kweaver-ai/idrm-go-frame/core/telemetry/log"
 	af_trace "github.com/kweaver-ai/idrm-go-frame/core/telemetry/trace"
+	"github.com/kweaver-ai/idrm-go-frame/core/utils/httpclient"
 	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 )
