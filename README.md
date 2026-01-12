@@ -4,7 +4,7 @@
 
 ## Overview
 
-`idrm-go-common` is a comprehensive Go common library for the **Intelligent Data Rights Management (IDRM)** system developed by kweaver-ai. It provides shared components, API definitions, utilities, and service integrations for building data governance and management applications.
+`idrm-go-common` is a comprehensive Go common library for the **Intelligent Data Resource Management (IDRM)** system developed by kweaver-ai. It provides shared components, API definitions, utilities, and service integrations for building data governance and management applications.
 
 ## Features
 
