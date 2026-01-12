@@ -1,0 +1,13 @@
+{
+    "name": "计划 0514 1624",
+    "type": "data_aggregation",
+    "responsible_uid": "8ca13f64-ff06-11ef-bbe0-ba020467f4e3",
+    "priority": "common",
+    "description": "说明",
+    "remark": "备注",
+    "source_type": "plan",
+    "source_id": "cdb59a06-44ad-4067-844a-c21aec81db73",
+    "data_aggregation_inventory": {
+        "id": "0196c329-661f-7413-bf8f-b8b3e6bbecd5"
+    }
+}

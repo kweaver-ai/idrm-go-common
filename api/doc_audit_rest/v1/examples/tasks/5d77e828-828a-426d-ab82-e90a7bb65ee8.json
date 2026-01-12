@@ -1,0 +1,65 @@
+{
+  "id": "5d77e828-828a-426d-ab82-e90a7bb65ee8",
+  "biz_type": "af-data-permission-request",
+  "doc_id": null,
+  "doc_path": null,
+  "doc_type": null,
+  "doc_lib_type": null,
+  "apply_user_name": "Remilia Scarlet",
+  "apply_time": "2024-10-09T03:23:02.000+00:00",
+  "audit_status": null,
+  "apply_detail": {
+    "process": {
+      "conflict_apply_id": "",
+      "user_id": "41646000-5329-11ef-9021-629b89708d2f",
+      "user_name": "Remilia Scarlet",
+      "apply_id": "01926f4d-3025-700a-be48-893b59037643",
+      "proc_def_key": "Process_63cSLPhq",
+      "audit_type": "af-data-permission-request"
+    },
+    "data": "{\"indicator_authorizing_request_id\":\"01926f4d-3025-700a-be48-893b59037643\",\"indicator_code\":\"11\",\"indicator_name\":\"111\",\"indicator_type\":\"composite\",\"reason\":\"x\",\"requester_id\":\"41646000-5329-11ef-9021-629b89708d2f\",\"requester_name\":\"Remilia Scarlet\",\"timestamp\":\"2024-10-09T11:23:02.565005092+08:00\",\"type\":\"indicator\",\"usage\":\"AuthorizingRequest\"}",
+    "workflow": {
+      "webhooks": [
+        {
+          "webhook": "http://indicator-management:8213/api/internal/indicator-management/v1/indicator/528951301090879193/owner",
+          "strategy_tag": "af_data_owner_audit"
+        }
+      ],
+      "abstract_info": "{\"icon\":\"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNzIxMjA1MDMxOTEyIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjMyMTI1IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiPjxwYXRoIGQ9Ik0xMDIuNCAwaDgxOS4yYzY4LjI0OTYgMCAxMDIuNCAzNC4xNTA0IDEwMi40IDEwMi40djgxOS4yYzAgNjguMjQ5Ni0zNC4xNTA0IDEwMi40LTEwMi40IDEwMi40SDEwMi40Yy02OC4yNDk2IDAtMTAyLjQtMzQuMTUwNC0xMDIuNC0xMDIuNFYxMDIuNEMwIDM0LjE1MDQgMzQuMTUwNCAwIDEwMi40IDB6IiBmaWxsPSIjM0FDNEZGIiBwLWlkPSIzMjEyNiI+PC9wYXRoPjxwYXRoIGQ9Ik01MTIgMjA0LjhsMTQyLjY0MzIgODIuMjc4NHYxNjcuMzIxNkw1MTIgNTM2LjY3ODQgMzY5LjM1NjggNDU0LjRWMjg3LjA3ODRMNTEyIDIwNC44ek0zNDcuNDQzMiA0ODcuMzIxNmwxNDIuNTkyIDgyLjI3ODR2MTY3LjMyMTZMMzQ3LjQ0MzIgODE5LjIgMjA0LjggNzM2LjkyMTZ2LTE2Ny4zMjE2bDE0Mi42NDMyLTgyLjI3ODR6IG0zMjkuMTEzNiAwTDgxOS4yIDU2OS42djE2Ny4zMjE2TDY3Ni41NTY4IDgxOS4ybC0xNDIuNTkyLTgyLjI3ODR2LTE2Ny4zMjE2bDE0Mi41OTItODIuMjc4NHoiIGZpbGw9IiNGRkZGRkYiIHAtaWQ9IjMyMTI3Ij48L3BhdGg+PC9zdmc+\",\"text\":\"复合指标名称: 111\"}",
+      "top_csf": 5
+    }
+  },
+  "workflow": {
+    "top_csf": 5,
+    "msg_for_email": null,
+    "msg_for_log": null,
+    "content": null,
+    "abstract_info": {
+      "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNzIxMjA1MDMxOTEyIiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjMyMTI1IiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiPjxwYXRoIGQ9Ik0xMDIuNCAwaDgxOS4yYzY4LjI0OTYgMCAxMDIuNCAzNC4xNTA0IDEwMi40IDEwMi40djgxOS4yYzAgNjguMjQ5Ni0zNC4xNTA0IDEwMi40LTEwMi40IDEwMi40SDEwMi40Yy02OC4yNDk2IDAtMTAyLjQtMzQuMTUwNC0xMDIuNC0xMDIuNFYxMDIuNEMwIDM0LjE1MDQgMzQuMTUwNCAwIDEwMi40IDB6IiBmaWxsPSIjM0FDNEZGIiBwLWlkPSIzMjEyNiI+PC9wYXRoPjxwYXRoIGQ9Ik01MTIgMjA0LjhsMTQyLjY0MzIgODIuMjc4NHYxNjcuMzIxNkw1MTIgNTM2LjY3ODQgMzY5LjM1NjggNDU0LjRWMjg3LjA3ODRMNTEyIDIwNC44ek0zNDcuNDQzMiA0ODcuMzIxNmwxNDIuNTkyIDgyLjI3ODR2MTY3LjMyMTZMMzQ3LjQ0MzIgODE5LjIgMjA0LjggNzM2LjkyMTZ2LTE2Ny4zMjE2bDE0Mi42NDMyLTgyLjI3ODR6IG0zMjkuMTEzNiAwTDgxOS4yIDU2OS42djE2Ny4zMjE2TDY3Ni41NTY4IDgxOS4ybC0xNDIuNTkyLTgyLjI3ODR2LTE2Ny4zMjE2bDE0Mi41OTItODIuMjc4NHoiIGZpbGw9IiNGRkZGRkYiIHAtaWQ9IjMyMTI3Ij48L3BhdGg+PC9zdmc+",
+      "text": "复合指标名称: 111"
+    },
+    "front_plugin_info": {
+      "tenant_id": "af_workflow",
+      "entry": "/anyfabric/dataOperationAudit.html",
+      "name": "af-data-permission-request",
+      "category_belong": "af_workflow",
+      "label": {
+        "en-us": "asset permission",
+        "zh-tw": "資源權限",
+        "zh-cn": "资源权限"
+      },
+      "audit_type": "af-data-permission-request"
+    }
+  },
+  "proc_inst_id": "cae3e12f-85ed-11ef-9e01-0a251ac39e0e",
+  "doc_names": "复合指标名称: 111",
+  "version": null,
+  "apply_user_id": "41646000-5329-11ef-9021-629b89708d2f",
+  "end_time": null,
+  "strategy_configs": {
+    "audit_idea_config": {
+      "status": "2",
+      "audit_idea_switch": false
+    }
+  }
+}

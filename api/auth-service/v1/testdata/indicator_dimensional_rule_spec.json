@@ -1,0 +1,18 @@
+{
+    "indicator_id": "12450",
+    "name": "NAME",
+    "fields": [
+        {
+            "id": "00000000-0000-0000-0000-111111111111",
+            "name": "名称 0000",
+            "name_en": "NAME EN 0000",
+            "data_type": "DATA TYPE 0000"
+        },
+        {
+            "id": "00000000-0000-0000-1111-111111111111",
+            "name": "名称 1111",
+            "name_en": "NAME EN 1111",
+            "data_type": "DATA TYPE 1111"
+        }
+    ]
+}

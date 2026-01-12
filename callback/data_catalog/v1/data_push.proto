@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package data_catalog.v1;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/kweaver-ai/idrm-go-common/api/data_catalog/v1";
+
+
+
+
+// 服务定义
+service DataPushCallbackService {
+  // 任务相关操作
+  rpc CompleteTask(CompleteTaskRequest) returns (google.protobuf.Empty);
+}
+
+// 任务信息
+message TaskInfo {
+  int64 tenantId = 1;           // 租户Id
+  optional int64 spaceId = 2;            // 空间Id
+  TaskTypeEnum taskType = 3;            // 任务类型: collection-采集任务; exchange-交换任务; push-推送任务
+  string taskName = 4;          // 一个任务存在多个采集/交换动作
+  string deptCode = 5;          // 所属部门
+  TaskStatusEnum taskStatus = 6;          // notStarted-未开始, inProgress-进行中, completed-已结束, stopped-已停用
+  string taskCreateUser = 7;    // 任务创建人
+  string taskCreateTime = 8;  // 任务创建时间
+  int64 executionId = 9;        // 执行任务Id (对应爱数: 作业监控Id)
+  string executionName = 10;    // 执行任务名称，最小单位 (对应爱数: 模型名称+任务id)
+  string executionStartTime = 11;  // 执行任务开始时间
+  optional string executionEndTime = 12;    // 执行任务完成时间
+  ExecutionStatusEnum executionStatus = 13;    // notStarted-未开始, inProgress-进行中, completed-已结束, stopped-已停用, pause-暂停, success-成功, fail-失败
+  Statistics sourceStatistics = 14;  // 来源统计数据: 对于爱数对应推送数据来源，对于采集系统对应采集数据来源
+  Statistics targetStatistics = 15;  // 目标统计数据: 对于爱数对应推送数据目的，对于采集系统对应采集数据目的
+}
+
+// 统计信息
+message Statistics {
+  int64 databaseId = 1;         // 前置库Id
+  optional string deptCode = 2;          // 所属部门，未填写则使用任务填写部门
+  int64 datasourceId = 3;       // 数据源Id
+  optional string datasourceName = 4;    // 数据源名称
+  optional string datasourceIp = 5;      // 数据源Ip
+  optional int32 datasourcePort = 6;     // 数据源端口
+  optional string databaseName = 7;      // 数据库名称
+  string tableName = 8;         // 数据表名称
+  int64 totalAmount = 9;        // 数据量
+  string type = 10;             // 目前就是全量、增量两种
+}
+
+// 枚举类型定义
+enum TaskTypeEnum {
+  task_type_unspecified = 0; // 默认值，必须为0
+  collection = 1;
+  exchange = 2;
+  push = 3;
+}
+
+enum TaskStatusEnum {
+  unspecified = 0; // 默认值，必须为0
+  waiting = 1;    // 待发布
+  notStarted = 2; // 未开始
+  inProgress = 3; // 进行中
+  completed = 4;       // 已结束
+  stopped = 5;     // 已停用
+}
+
+enum ExecutionStatusEnum {
+  execution_status_unspecified = 0; // 默认值，必须为0
+  execution_not_started = 1; // 未开始
+  execution_in_progress = 2; // 进行中
+  execution_completed = 3;  // 已结束
+  execution_stopped = 4;    // 已停用
+  execution_pause = 5;      // 暂停
+  execution_success = 6;    // 成功
+  execution_fail = 7;       // 失败
+}
+
+
+// 请求和响应消息
+message CompleteTaskRequest {
+  repeated TaskInfo tasks = 1;
+} 

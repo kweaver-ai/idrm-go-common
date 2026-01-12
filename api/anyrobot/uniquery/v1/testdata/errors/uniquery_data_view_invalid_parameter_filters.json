@@ -1,0 +1,7 @@
+{
+    "error_code": "Uniquery.DataView.InvalidParameter.Filters",
+    "description": "过滤器配置无效",
+    "solution": "请检查参数是否正确。",
+    "error_link": "暂无",
+    "error_details": "failed to new condition, condition config field name must in view original fields"
+}

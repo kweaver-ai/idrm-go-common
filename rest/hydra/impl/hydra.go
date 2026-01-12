@@ -1,0 +1,312 @@
+package impl
+
+import (
+	"bytes"
+	"context"
+	"encoding/base64"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"sync"
+
+	jsoniter "github.com/json-iterator/go"
+	"github.com/kweaver-ai/idrm-go-common/rest/base"
+	Ihydra "github.com/kweaver-ai/idrm-go-common/rest/hydra"
+	"github.com/kweaver-ai/idrm-go-frame/core/telemetry/log"
+	af_trace "github.com/kweaver-ai/idrm-go-frame/core/telemetry/trace"
+	"go.uber.org/zap"
+)
+
+type hydra struct {
+	adminAddress   string
+	publicAddress  string
+	client         *http.Client
+	visitorTypeMap map[string]Ihydra.VisitorType
+	accountTypeMap map[string]Ihydra.AccountType
+}
+
+var (
+	hOnce sync.Once
+	h     *hydra
+)
+
+var clientTypeMap = map[string]Ihydra.ClientType{
+	"unknown":       Ihydra.Unknown,
+	"ios":           Ihydra.IOS,
+	"android":       Ihydra.Android,
+	"windows_phone": Ihydra.WindowsPhone,
+	"windows":       Ihydra.Windows,
+	"mac_os":        Ihydra.MacOS,
+	"web":           Ihydra.Web,
+	"mobile_web":    Ihydra.MobileWeb,
+	"nas":           Ihydra.Nas,
+	"console_web":   Ihydra.ConsoleWeb,
+	"deploy_web":    Ihydra.DeployWeb,
+	"linux":         Ihydra.Linux,
+}
+
+// NewHydra 创建授权服务
+func NewHydra(client *http.Client, hydraAdmin, hydraPublic string) Ihydra.Hydra {
+	hOnce.Do(func() {
+		visitorTypeMap := map[string]Ihydra.VisitorType{
+			"realname":  Ihydra.RealName,
+			"anonymous": Ihydra.Anonymous,
+			"business":  Ihydra.App,
+		}
+		accountTypeMap := map[string]Ihydra.AccountType{
+			"other":   Ihydra.Other,
+			"id_card": Ihydra.IDCard,
+		}
+		h = &hydra{
+			adminAddress:   fmt.Sprintf("http://%s", hydraAdmin),
+			publicAddress:  fmt.Sprintf("http://%s", hydraPublic),
+			client:         client,
+			visitorTypeMap: visitorTypeMap,
+			accountTypeMap: accountTypeMap,
+		}
+	})
+
+	return h
+}
+
+func NewHydraByService(client *http.Client) Ihydra.Hydra {
+	return NewHydra(client, base.RemoveSchema(base.Service.HydraAdminHost), base.RemoveSchema(base.Service.HydraPublicHost))
+}
+
+// Introspect token内省
+func (h *hydra) Introspect(ctx context.Context, token string) (info Ihydra.TokenIntrospectInfo, err error) {
+	ctx, span := af_trace.StartInternalSpan(ctx)
+	defer func() { af_trace.TelemetrySpanEnd(span, err) }()
+	target := fmt.Sprintf("%v/admin/oauth2/introspect", h.adminAddress)
+	//resp, err := h.client.Post(target, "application/x-www-form-urlencoded",
+	//	bytes.NewReader([]byte(fmt.Sprintf("token=%v", token))))
+	req, err := http.NewRequest(http.MethodPost, target, bytes.NewReader([]byte(fmt.Sprintf("token=%v", token))))
+	if err != nil {
+		log.WithContext(ctx).Error("Introspect NewRequest", zap.Error(err))
+		return
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err := h.client.Do(req.WithContext(ctx))
+	if err != nil {
+		log.WithContext(ctx).Error("Introspect Post", zap.Error(err))
+		return
+	}
+
+	defer func() {
+		closeErr := resp.Body.Close()
+		if closeErr != nil {
+			//common.NewLogger().Errorln(closeErr)
+			log.WithContext(ctx).Error("Introspect resp.Body.Close", zap.Error(closeErr))
+
+		}
+	}()
+
+	body, err := io.ReadAll(resp.Body)
+	if (resp.StatusCode < http.StatusOK) || (resp.StatusCode >= http.StatusMultipleChoices) {
+		err = errors.New(string(body))
+		return
+	}
+
+	respParam := make(map[string]interface{})
+	err = jsoniter.Unmarshal(body, &respParam)
+	if err != nil {
+		return
+	}
+
+	// 令牌状态
+	info.Active = respParam["active"].(bool)
+	if !info.Active {
+		return
+	}
+
+	// 访问者ID
+	info.VisitorID = respParam["sub"].(string)
+	// Scope 权限范围
+	info.Scope = respParam["scope"].(string)
+	// 客户端ID
+	info.ClientID = respParam["client_id"].(string)
+	// 客户端凭据模式
+	if info.VisitorID == info.ClientID {
+		info.VisitorTyp = Ihydra.App
+		return
+	}
+	// 以下字段 只在非客户端凭据模式时才存在
+	// 访问者类型
+	info.VisitorTyp = h.visitorTypeMap[respParam["ext"].(map[string]interface{})["visitor_type"].(string)]
+
+	// 匿名用户
+	if info.VisitorTyp == Ihydra.Anonymous {
+		// 文档库访问规则接口考虑后续扩展性，clientType为必传。本身规则计算未使用clientType
+		// 设备类型本身未解析,匿名时默认为web
+		info.ClientTyp = Ihydra.Web
+		return
+	}
+
+	// 实名用户
+	if info.VisitorTyp == Ihydra.RealName {
+		// 登陆IP
+		info.LoginIP = respParam["ext"].(map[string]interface{})["login_ip"].(string)
+		// 设备ID
+		info.Udid = respParam["ext"].(map[string]interface{})["udid"].(string)
+		// 登录账号类型
+		info.AccountTyp = h.accountTypeMap[respParam["ext"].(map[string]interface{})["account_type"].(string)]
+		// 设备类型
+		info.ClientTyp = clientTypeMap[respParam["ext"].(map[string]interface{})["client_type"].(string)]
+		return
+	}
+
+	return
+}
+
+// 获取账号名称
+func (h *hydra) GetClientNameById(ctx context.Context, id string) (clientName string, err error) {
+	ctx, span := af_trace.StartInternalSpan(ctx)
+	defer func() { af_trace.TelemetrySpanEnd(span, err) }()
+	target := fmt.Sprintf("%v/admin/clients/%v", h.adminAddress, id)
+	//resp, err := h.client.Post(target, "application/x-www-form-urlencoded",
+	//	bytes.NewReader([]byte(fmt.Sprintf("token=%v", token))))
+	req, err := http.NewRequest(http.MethodGet, target, nil)
+	if err != nil {
+		log.WithContext(ctx).Error("GetClient NewRequest", zap.Error(err))
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := h.client.Do(req.WithContext(ctx))
+	if err != nil {
+		log.WithContext(ctx).Error("GetClient Post", zap.Error(err))
+		return
+	}
+
+	defer func() {
+		closeErr := resp.Body.Close()
+		if closeErr != nil {
+			//common.NewLogger().Errorln(closeErr)
+			log.WithContext(ctx).Error("GetClient resp.Body.Close", zap.Error(closeErr))
+
+		}
+	}()
+
+	body, err := io.ReadAll(resp.Body)
+	if (resp.StatusCode < http.StatusOK) || (resp.StatusCode >= http.StatusMultipleChoices) {
+		err = errors.New(string(body))
+		return
+	}
+
+	respParam := make(map[string]interface{})
+	err = jsoniter.Unmarshal(body, &respParam)
+	if err != nil {
+		return
+	}
+
+	// 访问者名称
+	clientName = respParam["client_name"].(string)
+	return
+}
+
+func (h *hydra) RegistCredentialClient(ctx context.Context, name, password string) (clientID string, err error) {
+	ctx, span := af_trace.StartInternalSpan(ctx)
+	defer func() { af_trace.TelemetrySpanEnd(span, err) }()
+	params := map[string]any{
+		"client_name":    name,
+		"client_secret":  password,
+		"grant_types":    []string{"client_credentials"},
+		"response_types": []string{"token"},
+		"scope":          "all",
+	}
+
+	var (
+		buf  []byte
+		req  *http.Request
+		resp *http.Response
+	)
+	buf, err = json.Marshal(params)
+	if err != nil {
+		log.WithContext(ctx).Errorf("Marshal failed. err: %v", err)
+		return "", err
+	}
+	target := fmt.Sprintf("%v/admin/clients", h.adminAddress)
+	req, err = http.NewRequest(http.MethodPost, target, bytes.NewReader(buf))
+	if err != nil {
+		log.WithContext(ctx).Error("RegistCredentialClient NewRequest", zap.Error(err))
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err = h.client.Do(req.WithContext(ctx))
+	if err != nil {
+		log.WithContext(ctx).Error("RegistCredentialClient Post", zap.Error(err))
+		return
+	}
+
+	defer func() {
+		closeErr := resp.Body.Close()
+		if closeErr != nil {
+			log.WithContext(ctx).Error("RegistCredentialClient resp.Body.Close", zap.Error(closeErr))
+		}
+	}()
+
+	body, err := io.ReadAll(resp.Body)
+	if (resp.StatusCode < http.StatusOK) || (resp.StatusCode >= http.StatusMultipleChoices) {
+		err = errors.New(string(body))
+		return
+	}
+
+	respParam := make(map[string]interface{})
+	err = jsoniter.Unmarshal(body, &respParam)
+	if err != nil {
+		return
+	}
+
+	clientID = respParam["client_id"].(string)
+	return
+}
+
+func (h *hydra) GetClientCredentialToken(ctx context.Context, clientID, clientSecret string) (token string, expiresIn int64, err error) {
+	var (
+		buf  []byte
+		req  *http.Request
+		resp *http.Response
+	)
+	info := clientID + ":" + clientSecret
+	base64 := "Basic " + base64.StdEncoding.EncodeToString([]byte(info))
+	params := "grant_type=client_credentials&scope=all"
+	target := fmt.Sprintf("%v/oauth2/token", h.publicAddress)
+	req, err = http.NewRequest(http.MethodPost, target, bytes.NewReader([]byte(params)))
+	if err != nil {
+		log.WithContext(ctx).Error("GetClientCredentialToken NewRequest", zap.Error(err))
+		return
+	}
+	req.Header.Set("Authorization", base64)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err = h.client.Do(req.WithContext(ctx))
+	if err != nil {
+		log.WithContext(ctx).Error("GetClientCredentialToken Post", zap.Error(err))
+		return
+	}
+
+	defer func() {
+		closeErr := resp.Body.Close()
+		if closeErr != nil {
+			log.WithContext(ctx).Error("GetClientCredentialToken resp.Body.Close", zap.Error(closeErr))
+		}
+	}()
+
+	buf, err = io.ReadAll(resp.Body)
+	if (resp.StatusCode < http.StatusOK) || (resp.StatusCode >= http.StatusMultipleChoices) {
+		err = errors.New(string(buf))
+		return
+	}
+
+	var accessToken struct {
+		AccessToken string `json:"access_token"`
+		ExpiresIn   int64  `json:"expires_in"`
+	}
+	if err = json.Unmarshal(buf, &accessToken); err != nil {
+		log.WithContext(ctx).Error("Unmarshal failed. err", zap.Error(err))
+		return
+	}
+	token = accessToken.AccessToken
+	expiresIn = accessToken.ExpiresIn
+	return
+}

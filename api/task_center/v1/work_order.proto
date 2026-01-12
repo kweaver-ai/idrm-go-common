@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+package task_center.v1;
+
+option go_package = "github.com/kweaver-ai/idrm-go-common/api/task_center/v1";
+
+// 工单回调服务接口（由集成开发实现）
+service WorkOrderCallbackService {
+    // 工单通过审批
+    rpc OnApproved(WorkOrderApprovedEvent) returns (CommonResult);
+}
+
+message CommonResult {
+  //errcode 0 errmsg OK 执行成功
+  string errcode = 1;
+  string errmsg = 2;
+}
+
+// 事件：工单通过审批
+message WorkOrderApprovedEvent {
+    // 工单 ID
+    string id = 1;
+    // 工单名称
+    string name = 2;
+    // 工单类型
+    //
+    //  | Value             | Description |
+    //  | :---------------- | :---------- |
+    //  | DataAggregation   | 数据归集    |
+    //  | DataComprehension | 数据理解    |
+    //  | DataFusion        | 数据融合    |
+    //  | DataQuality       | 数据质量    |
+    //  | DataQualityAudit  | 数据稽核    |
+    string type = 3;
+    // 工单责任人 ID
+    string responsibleUID  = 4;
+    // 工单描述
+    string description = 5;
+    // 工单内容，各种类型s类型的工单有不同的内容
+    oneof detail {
+        // 数据归集
+        DataAggregationDetail dataAggregation = 6;
+        // 数据理解
+        DataComprehensionDetail dataComprehension = 7;
+        // 数据融合
+        DataFusionDetail dataFusion = 8;
+        // 数据质量
+        DataQualityDetail dataQuality = 9;
+        // 数据质量稽核
+        DataQualityAuditDetail dataQualityAudit = 10;
+    }
+    // 租户 ID
+    string tenantID = 11;
+}
+
+// 工单内容：数据归集
+message DataAggregationDetail {
+    // 归集资源列表
+    repeated DataAggregationResource resources = 1;
+}
+
+// 工单内容：数据归集 - 归集资源
+message DataAggregationResource {
+    // 源表
+    DataAggregationTableReference source = 1;
+    // 目标表
+    DataAggregationTableReference target = 2;
+    // 采集方式
+    //
+    //  | Value     | Description |
+    //  | :-------- | :---------- |
+    //  | Full      | 全量        |
+    //  | Increment | 增量        |
+    string collectionMethod  = 3;
+    // 同步频率
+    //
+    //  | Value     | Description |
+    //  | :-------- | :---------- |
+    //  | PerMinute | 每分钟      |
+    //  | PerHour   | 每小时      |
+    //  | PerDay    | 每天        |
+    //  | PerWeek   | 每周        |
+    //  | PerMonth  | 每月        |
+    //  | PerYear   | 每年        |
+    string syncFrequency = 4;
+}
+
+// 数据归集工单：数据表的引用
+message DataAggregationTableReference {
+    // 所属数据源的 ID，第三方的数据源 ID 而非 AISHU 的数据源 ID
+    string datasourceID = 1;
+    // 表名称
+    string tableName = 2;
+}
+
+// 工单内容：数据理解
+//
+// TODO: 待定义
+message DataComprehensionDetail {}
+
+// 工单内容：数据融合
+message DataFusionDetail {
+    string table_name =1;
+    repeated FusionField fields =2;
+    int32 fusion_type =3;
+    string run_cron_strategy =4;
+    string exec_sql =5;
+    string run_start_at =6;
+    string run_end_at =7;
+    string datasource_id =8;
+    string datasource_name =9;
+    string datasource_type =10;
+}
+message FusionField  {
+    string c_name =1;
+    string e_name =2;
+    optional string standard_id =3;
+    optional string code_table_id =4;
+    optional string code_rule_id =5;
+    optional string data_range =6;
+    optional int32 data_type =7;
+    optional int32 data_length =8;
+    optional int32 data_accuracy =9;
+    optional bool primary_key =10;
+    optional bool is_required =11;
+    optional bool is_increment =12;
+    optional bool is_standard =13;
+    string field_relationship =14;
+    optional string catalog_id =15;
+    optional string info_item_id =16;
+    optional int32 index =17;
+}
+
+// 工单内容：数据质量
+//
+// TODO: 待定义
+message DataQualityDetail {}
+
+// 工单内容：数据质量稽核
+message DataQualityAuditDetail {
+    // 规则信息列表
+    repeated DataQualityRuleResource resources = 1;
+}
+
+// 工单内容：数据质量稽核 - 规则资源
+message DataQualityRuleResource {
+    string form_view_name =1;
+    string field_name =2;
+    string rule_id =3;
+    string rule_name =4;
+    string dimension =5;
+    string rule_config =6;
+    string rule_description =7;
+    string data_source_id = 8;
+    string dimension_type =9;
+}

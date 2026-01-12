@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package asset_portal.v1;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/kweaver-ai/idrm-go-common/api/asset_portal/v1";
+
+service NotificationService {
+  // 创建消息通知
+  rpc Create(Notification) returns (google.protobuf.Empty);
+}
+
+// 消息通知
+message Notification {
+  // 收件人手机号
+  string phoneNumber = 1;
+  // 通知的内容
+  string message = 2;
+}

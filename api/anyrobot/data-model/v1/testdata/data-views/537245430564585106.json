@@ -1,0 +1,232 @@
+{
+    "id": "537245430564585106",
+    "name": "AnyFabric 审计日志",
+    "tags": [],
+    "data_source": {
+        "type": "index_base",
+        "index_base": [
+            {
+                "base_type": "anyfabric_audit_log",
+                "name": "AnyFabric 审计日志",
+                "comment": ""
+            }
+        ]
+    },
+    "comment": "",
+    "update_time": "2024-10-24T16:11:18+08:00",
+    "builtin": 0,
+    "field_scope": 1,
+    "fields": [
+        {
+            "name": "@timestamp",
+            "type": "date",
+            "comment": ""
+        },
+        {
+            "name": "__data_type",
+            "type": "keyword",
+            "comment": ""
+        },
+        {
+            "name": "__index_base",
+            "type": "keyword",
+            "comment": ""
+        },
+        {
+            "name": "__write_time",
+            "type": "date",
+            "comment": ""
+        },
+        {
+            "name": "category",
+            "type": "keyword",
+            "comment": ""
+        },
+        {
+            "name": "tags",
+            "type": "keyword",
+            "comment": ""
+        },
+        {
+            "name": "type",
+            "type": "keyword",
+            "comment": ""
+        },
+        {
+            "name": "Resource.job_id",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Resource.service.name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Resource.service.version",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Resource.service.instance.id",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Resource.telemetry.sdk.version",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Resource.telemetry.sdk.language",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Resource.telemetry.sdk.name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Link.TraceId",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Link.SpanId",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "SeverityText",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "@version",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.FieldType",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.description",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operation",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.department.id",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.department.name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.id",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.type",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.agent.type",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.agent.ip",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.operator.agent.ips",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.source_object.name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.source_object.id",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.source_object.owner_name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.source_object.department_path",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.target_object.department_path",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.target_object.id",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.target_object.name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "Body.resource_operation.target_object.owner_name",
+            "type": "text",
+            "comment": ""
+        },
+        {
+            "name": "geoip.location",
+            "type": "geo_point",
+            "comment": ""
+        },
+        {
+            "name": "geoip.longitude",
+            "type": "half_float",
+            "comment": ""
+        },
+        {
+            "name": "geoip.ip",
+            "type": "ip",
+            "comment": ""
+        },
+        {
+            "name": "geoip.latitude",
+            "type": "half_float",
+            "comment": ""
+        },
+        {
+            "name": "Attributes",
+            "type": "object",
+            "comment": ""
+        }
+    ],
+    "filters": null
+}

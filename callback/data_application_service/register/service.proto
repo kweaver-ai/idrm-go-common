@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package register;
+
+option go_package = "github.com/kweaver-ai/idrm-go-common/callback/data_application_service/register";
+
+// 服务定义
+service UserService {
+  // 服务创建接口
+  rpc Create(CreateRequest) returns (Result){};
+  // 服务修改接口
+  rpc Update(UpdateRequest) returns (Result){};
+  // 服务状态修改接口（上线，下线）
+  rpc StatusUpdate(StatusUpdateRequest) returns (Result){};
+}
+
+
+
+message Result {
+    string sync_flag = 1; //同步状态(success,fail)
+    string msg = 2; //返回消息
+}
+
+message CreateRequest {
+    string paas_id = 1; //网关注册id，对应AF应用ID
+    string svc_id = 2; //服务id，对应AF接口服务ID
+    string svc_name = 3; //服务名，对应AF接口服务名
+    string description = 4; //服务描述，对应AF接口服务描述
+    string pub_host = 5; //网关公共域名，留空
+    string pub_path = 6; //网关公共路径，留空
+    string target_path = 7; //网关目标路径，由AF接口服务路径拼接而成(/{固定前缀ebus}/{paas_id}/{接口路径服务路径})
+    bool target_is_https = 8; //接口uri是否https
+    string svc_code = 9; //服务code
+    bool is_old_svc = 10; // 是否为老的服务
+}
+
+message UpdateRequest {
+    string paas_id = 1; //网关注册id，对应AF应用ID
+    string svc_id = 2; //服务id，对应AF接口服务ID
+    string svc_name = 3; //服务名，对应AF接口服务名
+    string pub_host = 4; //网关公共域名，留空
+    string pub_path = 5; //网关公共路径，留空
+    string target_path = 6; //网关目标路径，由AF接口服务路径拼接而成(/{固定前缀ebus}/{paas_id}/{接口路径服务路径})
+    bool target_is_https = 7; //接口uri是否https
+    string description = 8; //服务描述，对应AF接口服务描述
+    string svc_code = 9; //服务code
+    bool is_old_svc = 10; // 是否为老的服务
+}
+
+message StatusUpdateRequest {
+    string paas_id = 1; //网关注册id，对应AF应用ID
+    string svc_id = 2; //服务id，对应AF接口服务ID
+    string status = 3; //状态，对应AF接口服务的状态（下线0上线1）
+    string svc_code = 4; //服务code
+    bool is_old_svc = 5; // 是否为老的服务
+}

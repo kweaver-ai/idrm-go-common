@@ -1,0 +1,516 @@
+{
+    "view": {
+        "id": "514940169606948879",
+        "name": "aaalog",
+        "tags": [],
+        "data_source": {
+            "index_base": [
+                {
+                    "base_type": "aaalog",
+                    "comment": "",
+                    "name": "aaalog"
+                }
+            ],
+            "type": "index_base"
+        },
+        "field_scope": 1,
+        "fields": [
+            {
+                "name": "@timestamp",
+                "type": "date",
+                "comment": ""
+            },
+            {
+                "name": "__data_type",
+                "type": "keyword",
+                "comment": ""
+            },
+            {
+                "name": "__index_base",
+                "type": "keyword",
+                "comment": ""
+            },
+            {
+                "name": "__write_time",
+                "type": "date",
+                "comment": ""
+            },
+            {
+                "name": "category",
+                "type": "keyword",
+                "comment": ""
+            },
+            {
+                "name": "tags",
+                "type": "keyword",
+                "comment": ""
+            },
+            {
+                "name": "type",
+                "type": "keyword",
+                "comment": ""
+            },
+            {
+                "name": "geoip.latitude",
+                "type": "half_float",
+                "comment": ""
+            },
+            {
+                "name": "geoip.location",
+                "type": "geo_point",
+                "comment": ""
+            },
+            {
+                "name": "geoip.longitude",
+                "type": "half_float",
+                "comment": ""
+            },
+            {
+                "name": "geoip.ip",
+                "type": "ip",
+                "comment": ""
+            },
+            {
+                "name": "SeverityText",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Link.TraceId",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Link.SpanId",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "__labels_str",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Attributes",
+                "type": "object",
+                "comment": ""
+            },
+            {
+                "name": "Resource.job_id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Resource.service.version",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Resource.service.instance.id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Resource.service.name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Resource.telemetry.sdk.name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Resource.telemetry.sdk.version",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Resource.telemetry.sdk.language",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.FieldType",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.Message",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test_now.now",
+                "type": "date",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.description",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operation",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.type",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.agent.IP",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.agent.Type",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.agent.ip",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.agent.ips",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.agent.type",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.department.id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.operator.department.name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.type",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.business_name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.sql",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.scene_analysis_id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.http_method",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.owner_id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.primary_key",
+                "type": "boolean",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.data_type",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.code_table_id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.original_data_type",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.technical_name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.data_length",
+                "type": "long",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.id",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.is_nullable",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.logic_view_field.business_name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.technical_name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.resource_operation.target_object.name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.Opaque",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.OmitHost",
+                "type": "boolean",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.Host",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.Path",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.RawFragment",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.ForceQuery",
+                "type": "boolean",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.RawPath",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.Fragment",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.Scheme",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "Body.test.RawQuery",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "labels.task_name",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "labels.step",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "@version",
+                "type": "text",
+                "comment": ""
+            },
+            {
+                "name": "metrics.__m.aaax",
+                "type": "long",
+                "comment": ""
+            },
+            {
+                "name": "metrics.__m.aaa",
+                "type": "long",
+                "comment": ""
+            },
+            {
+                "name": "__routing",
+                "type": "text",
+                "comment": ""
+            }
+        ],
+        "filters": null
+    },
+    "datas": [
+        {
+            "total": "8",
+            "values": [
+                {
+                    "@timestamp": "2024-07-05T01:45:49.293Z",
+                    "@version": "1",
+                    "Attributes": {},
+                    "Body": {
+                        "FieldType": "resource_operation",
+                        "resource_operation": {
+                            "description": "用户\"Remilia Scarlet\"生成接口\"笨蛋\"",
+                            "operation": "generate_api",
+                            "operator": {
+                                "agent": {
+                                    "ip": "10.4.134.16",
+                                    "ips": [
+                                        "10.4.134.16"
+                                    ],
+                                    "type": "web"
+                                },
+                                "department": [
+                                    {
+                                        "id": "01907b6d-9511-7dd5-8599-566a82034379/01907b6d-9511-7ddf-ad3f-c4b6a84fc0fc",
+                                        "name": "東方幻想鄉/紅魔館"
+                                    }
+                                ],
+                                "id": "01907b6b-c133-7802-941f-47009c365be0",
+                                "name": "Remilia Scarlet",
+                                "type": "authenticated_user"
+                            },
+                            "target_object": {
+                                "http_method": "POST",
+                                "id": "01907b70-40c2-74fe-8479-9533d91e7bfc",
+                                "name": "笨蛋"
+                            }
+                        }
+                    },
+                    "Link": {
+                        "SpanId": "0000000000000000",
+                        "TraceId": "00000000000000000000000000000000"
+                    },
+                    "Resource": {
+                        "job_id": "job-12d627fb523d7362",
+                        "service": {
+                            "instance": {
+                                "id": "dev"
+                            },
+                            "name": "localhost/audit/log",
+                            "version": "0.1.0"
+                        },
+                        "telemetry": {
+                            "sdk": {
+                                "language": "go",
+                                "name": "TelemetrySDK-Go/exporter/ar_log",
+                                "version": "2.6.3"
+                            }
+                        }
+                    },
+                    "SeverityText": "Info",
+                    "__data_type": "aaalog",
+                    "__id": "oEKRgJABu6Wq6d4aroa3",
+                    "__index": "ar-aaalog-2024.07.01-000000",
+                    "__index_base": "aaalog",
+                    "__write_time": "2024-07-05T01:45:49.345Z",
+                    "category": "log",
+                    "type": "aaalog"
+                },
+                {
+                    "@timestamp": "2024-07-04T09:10:06.707Z",
+                    "@version": "1",
+                    "Attributes": {},
+                    "Body": {
+                        "FieldType": "resource_operation",
+                        "resource_operation": {
+                            "description": "用户\"Remilia Scarlet\"生成接口\"笨蛋\"",
+                            "operation": "generate_api",
+                            "operator": {
+                                "agent": {
+                                    "ip": "10.4.134.16",
+                                    "ips": [
+                                        "10.4.134.16"
+                                    ],
+                                    "type": "web"
+                                },
+                                "department": [
+                                    {
+                                        "id": "01907b6d-9511-7dd5-8599-566a82034379/01907b6d-9511-7ddf-ad3f-c4b6a84fc0fc",
+                                        "name": "東方幻想鄉/紅魔館"
+                                    }
+                                ],
+                                "id": "01907b6b-c133-7802-941f-47009c365be0",
+                                "name": "Remilia Scarlet",
+                                "type": "authenticated_user"
+                            },
+                            "target_object": {
+                                "http_method": "POST",
+                                "id": "01907b70-40c2-74fe-8479-9533d91e7bfc",
+                                "name": "笨蛋"
+                            }
+                        }
+                    },
+                    "Link": {
+                        "SpanId": "0000000000000000",
+                        "TraceId": "00000000000000000000000000000000"
+                    },
+                    "Resource": {
+                        "job_id": "job-12d627fb523d7362",
+                        "service": {
+                            "instance": {
+                                "id": "dev"
+                            },
+                            "name": "localhost/audit/log",
+                            "version": "0.1.0"
+                        },
+                        "telemetry": {
+                            "sdk": {
+                                "language": "go",
+                                "name": "TelemetrySDK-Go/exporter/ar_log",
+                                "version": "2.6.3"
+                            }
+                        }
+                    },
+                    "SeverityText": "Info",
+                    "__data_type": "aaalog",
+                    "__id": "ntMCfZABu6Wq6d4aFBnd",
+                    "__index": "ar-aaalog-2024.07.01-000000",
+                    "__index_base": "aaalog",
+                    "__write_time": "2024-07-04T09:10:06.697Z",
+                    "category": "log",
+                    "type": "aaalog"
+                }
+            ]
+        }
+    ]
+}

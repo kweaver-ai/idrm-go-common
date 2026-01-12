@@ -1,0 +1,64 @@
+{
+  "id": "1430a112-addd-4be6-b0ab-87db191efb19",
+  "biz_type": "af-data-application-online",
+  "doc_id": null,
+  "doc_path": null,
+  "doc_type": null,
+  "doc_lib_type": null,
+  "apply_user_name": "Remilia Scarlet",
+  "apply_time": "2024-10-08T10:05:04.000+00:00",
+  "audit_status": null,
+  "apply_detail": {
+    "process": {
+      "user_id": "41646000-5329-11ef-9021-629b89708d2f",
+      "user_name": "Remilia Scarlet",
+      "apply_id": "1800384222912512",
+      "proc_def_key": "Process_AuHO1S7u",
+      "audit_type": "af-data-application-online"
+    },
+    "data": "{\"service_code\":\"JK20241008/000001\",\"service_id\":\"233e2998-20e6-4214-ac8c-9fe13764a863\",\"service_name\":\"echo-1008-1652\",\"submit_time\":\"2024-10-08 18:05:04\",\"submitter_id\":\"41646000-5329-11ef-9021-629b89708d2f\",\"submitter_name\":\"Remilia Scarlet\"}",
+    "workflow": {
+      "webhooks": [
+        {
+          "webhook": "http://data-application-service:8156/api/data-application-service/internal/v1/service/233e2998-20e6-4214-ac8c-9fe13764a863/auditors",
+          "strategy_tag": "af_data_owner_audit"
+        }
+      ],
+      "abstract_info": "{\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAA4klEQVR4nO3QMQ4BQRTG8W8SCoWChMIVtllZpYJCzSVcg3ANDSegUbAFByAqVyAh0ShISMbbyMrs7owZkQ3F/orJe8nO/JNl3LXH4GghHkPG5zanITZJQEsdcAZAvkKDgdMKWLdpiFIHGhs6Qi474LqnQZBz6CBumY4ofUBx8UXznVlAnD3iLs4SPwxUp0Cm9LwYfkTcxVlCHvAvfUoSSQJBxoFCHbB6QDpLi4HbGdh2geOCliB5wJOix60+UKzhrcOSHu8Ad4pIqAM+3e+S/BbRHwS+lAS0GJ/ZEzA0aY7D6AEy2oYaVU4r2QAAAABJRU5ErkJggg==\",\"text\":\"接口名称：echo-1008-1652\"}",
+      "top_csf": 5
+    }
+  },
+  "workflow": {
+    "top_csf": 5,
+    "msg_for_email": null,
+    "msg_for_log": null,
+    "content": null,
+    "abstract_info": {
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAA4klEQVR4nO3QMQ4BQRTG8W8SCoWChMIVtllZpYJCzSVcg3ANDSegUbAFByAqVyAh0ShISMbbyMrs7owZkQ3F/orJe8nO/JNl3LXH4GghHkPG5zanITZJQEsdcAZAvkKDgdMKWLdpiFIHGhs6Qi474LqnQZBz6CBumY4ofUBx8UXznVlAnD3iLs4SPwxUp0Cm9LwYfkTcxVlCHvAvfUoSSQJBxoFCHbB6QDpLi4HbGdh2geOCliB5wJOix60+UKzhrcOSHu8Ad4pIqAM+3e+S/BbRHwS+lAS0GJ/ZEzA0aY7D6AEy2oYaVU4r2QAAAABJRU5ErkJggg==",
+      "text": "接口名称：echo-1008-1652"
+    },
+    "front_plugin_info": {
+      "tenant_id": "af_workflow",
+      "entry": "/anyfabric/dataOperationAudit.html",
+      "name": "af-data-application-online",
+      "category_belong": "af_workflow",
+      "label": {
+        "en-us": "application online",
+        "zh-tw": "接口上綫",
+        "zh-cn": "接口上线"
+      },
+      "audit_type": "af-data-application-online"
+    }
+  },
+  "proc_inst_id": "c9ce4a4c-855c-11ef-9e01-0a251ac39e0e",
+  "doc_names": "接口名称：echo-1008-1652",
+  "version": null,
+  "apply_user_id": "41646000-5329-11ef-9021-629b89708d2f",
+  "end_time": null,
+  "strategy_configs": {
+    "audit_idea_config": {
+      "status": "2",
+      "audit_idea_switch": false
+    }
+  }
+}

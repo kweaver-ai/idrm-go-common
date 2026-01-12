@@ -1,0 +1,7 @@
+{
+    "error_code": "Uniquery.DataView.CountExceeded.Filters",
+    "description": "过滤条件个数超出限制",
+    "solution": "请检查参数是否正确。",
+    "error_link": "暂无",
+    "error_details": "The number of subConditions exceeds 10"
+}

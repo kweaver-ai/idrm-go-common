@@ -1,0 +1,39 @@
+{
+    "name": "业务表 0512 1826",
+    "type": "data_aggregation",
+    "responsible_uid": "8ca13f64-ff06-11ef-bbe0-ba020467f4e3",
+    "priority": "common",
+    "description": "说明",
+    "remark": "备注",
+    "source_type": "business_form",
+    "source_ids": [
+        "3a9d7fcf-9b24-401b-acaf-525e5eeae097",
+        "7511f4a2-f8d3-419a-9893-908ce5d1b4d9",
+        "832b4ead-ae8c-4ec5-b6c8-ac31f7eb1d46"
+    ],
+    "data_aggregation_inventory": {
+        "resources": [
+            {
+                "data_view_id": "fdf3d53c-a829-4e78-b6b9-51fedc5ffd5e",
+                "collection_method": "Full",
+                "sync_frequency": "PerHour",
+                "business_form_id": "3a9d7fcf-9b24-401b-acaf-525e5eeae097",
+                "target_datasource_id": "e2531535-629a-42f5-9d5c-c8a7fc2a74e5"
+            },
+            {
+                "data_view_id": "af2ea0a4-7f37-4588-8ba3-2afac40e1d3c",
+                "collection_method": "Full",
+                "sync_frequency": "PerHour",
+                "business_form_id": "7511f4a2-f8d3-419a-9893-908ce5d1b4d9",
+                "target_datasource_id": "e2531535-629a-42f5-9d5c-c8a7fc2a74e5"
+            },
+            {
+                "data_view_id": "a68e78f4-130a-408b-96de-a5def43383b7",
+                "collection_method": "Full",
+                "sync_frequency": "PerHour",
+                "business_form_id": "832b4ead-ae8c-4ec5-b6c8-ac31f7eb1d46",
+                "target_datasource_id": "e2531535-629a-42f5-9d5c-c8a7fc2a74e5"
+            }
+        ]
+    }
+}

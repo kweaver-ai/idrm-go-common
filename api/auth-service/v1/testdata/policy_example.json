@@ -1,0 +1,8 @@
+{
+    "subject_type": "user",
+    "subject_id": "00000000-0000-0000-0000-000000000000",
+    "object_type": "api",
+    "object_id": "00000000-0000-1111-0000-000000000000",
+    "action": "read",
+    "policy_effect": "allow"
+}
