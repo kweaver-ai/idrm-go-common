@@ -87,7 +87,7 @@ message DataAggregationResource {
 
 // 数据归集工单：数据表的引用
 message DataAggregationTableReference {
-    // 所属数据源的 ID，第三方的数据源 ID 而非 AISHU 的数据源 ID
+    // 所属数据源的 ID，第三方的数据源 ID 
     string datasourceID = 1;
     // 表名称
     string tableName = 2;

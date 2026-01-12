@@ -7,10 +7,11 @@
 package v1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -413,7 +414,7 @@ type DataAggregationTableReference struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// 所属数据源的 ID，第三方的数据源 ID 而非 AISHU 的数据源 ID
+	// 所属数据源的 ID，第三方的数据源 ID
 	DatasourceID string `protobuf:"bytes,1,opt,name=datasourceID,proto3" json:"datasourceID,omitempty"`
 	// 表名称
 	TableName string `protobuf:"bytes,2,opt,name=tableName,proto3" json:"tableName,omitempty"`
