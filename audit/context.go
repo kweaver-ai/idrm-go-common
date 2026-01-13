@@ -42,7 +42,7 @@ func fromStdContext(ctx context.Context) (Logger, error) {
 // implementation.
 type CustomContext interface {
 	context.Context
-	Set(key string, value any)
+	Set(key any, value any)
 }
 
 // SetCustomContext sets the logger in the context.
