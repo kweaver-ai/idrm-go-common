@@ -25,7 +25,7 @@ import (
 	"testing"
 )
 
-func TestSetGetUnsetHeader(t *testing.T) {
+func TestSetGetHeader(t *testing.T) {
 	const (
 		key   = "foo"
 		value = "bar"
@@ -65,17 +65,6 @@ func TestSetGetUnsetHeader(t *testing.T) {
 
 			if _, ok := GetHeader(ctx, otherKey); ok {
 				t.Errorf("GetHeader returned ok on non-existing key %q", otherKey)
-			}
-		},
-	)
-
-	t.Run(
-		"Unset",
-		func(t *testing.T) {
-			ctx := UnsetHeader(ctx, key)
-
-			if _, ok := GetHeader(ctx, key); ok {
-				t.Errorf("GetHeader returned ok on unset key %q", key)
 			}
 		},
 	)

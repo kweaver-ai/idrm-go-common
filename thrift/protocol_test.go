@@ -22,7 +22,7 @@ package thrift
 import (
 	"bytes"
 	"context"
-	"io"
+	"io/ioutil"
 	"math"
 	"net"
 	"net/http"
@@ -40,7 +40,6 @@ var (
 	INT64_VALUES   []int64
 	DOUBLE_VALUES  []float64
 	STRING_VALUES  []string
-	UUID_VALUES    []Tuuid
 )
 
 func init() {
@@ -55,20 +54,13 @@ func init() {
 	INT64_VALUES = []int64{459, 0, 1, -1, -128, 127, 32767, 2147483647, -2147483535, 34359738481, -35184372088719, -9223372036854775808, 9223372036854775807}
 	DOUBLE_VALUES = []float64{459.3, 0.0, -1.0, 1.0, 0.5, 0.3333, 3.14159, 1.537e-38, 1.673e25, 6.02214179e23, -6.02214179e23, INFINITY.Float64(), NEGATIVE_INFINITY.Float64(), NAN.Float64()}
 	STRING_VALUES = []string{"", "a", "st[uf]f", "st,u:ff with spaces", "stuff\twith\nescape\\characters'...\"lots{of}fun</xml>"}
-	UUID_VALUES = []Tuuid{
-		{},
-		Must(ParseTuuid("6ba7b810-9dad-11d1-80b4-00c04fd430c8")),
-		Must(ParseTuuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8")),
-		Must(ParseTuuid("6ba7b812-9dad-11d1-80b4-00c04fd430c8")),
-		Must(ParseTuuid("6ba7b814-9dad-11d1-80b4-00c04fd430c8")),
-	}
 }
 
 type HTTPEchoServer struct{}
 type HTTPHeaderEchoServer struct{}
 
 func (p *HTTPEchoServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	buf, err := io.ReadAll(req.Body)
+	buf, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(buf)
@@ -79,7 +71,7 @@ func (p *HTTPEchoServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func (p *HTTPHeaderEchoServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	buf, err := io.ReadAll(req.Body)
+	buf, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(buf)
@@ -219,48 +211,33 @@ func ReadWriteProtocolTest(t *testing.T, protocolFactory TProtocolFactory) {
 			continue
 		}
 		p := protocolFactory.GetProtocol(trans)
-		ReadWriteUUID(t, p, trans)
-		trans.Close()
-	}
-	for _, tf := range transports {
-		trans, err := tf.GetTransport(nil)
-		if err != nil {
-			t.Error(err)
-			continue
-		}
-		p := protocolFactory.GetProtocol(trans)
 		ReadWriteI64(t, p, trans)
 		ReadWriteDouble(t, p, trans)
 		ReadWriteBinary(t, p, trans)
 		ReadWriteByte(t, p, trans)
-		ReadWriteUUID(t, p, trans)
 		trans.Close()
 	}
-
-	t.Run("UnmatchedBeginEnd", func(t *testing.T) {
-		UnmatchedBeginEndProtocolTest(t, protocolFactory)
-	})
 }
 
 func ReadWriteBool(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(BOOL)
 	thelen := len(BOOL_VALUES)
-	err := p.WriteListBegin(context.Background(), thetype, thelen)
+	err := p.WriteListBegin(thetype, thelen)
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error writing list begin: %q", "ReadWriteBool", p, trans, err, thetype)
 	}
 	for k, v := range BOOL_VALUES {
-		err = p.WriteBool(context.Background(), v)
+		err = p.WriteBool(v)
 		if err != nil {
 			t.Errorf("%s: %T %T %v Error writing bool in list at index %v: %v", "ReadWriteBool", p, trans, err, k, v)
 		}
 	}
-	p.WriteListEnd(context.Background())
+	p.WriteListEnd()
 	if err != nil {
 		t.Errorf("%s: %T %T %v Error writing list end: %v", "ReadWriteBool", p, trans, err, BOOL_VALUES)
 	}
 	p.Flush(context.Background())
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %v Error reading list: %v", "ReadWriteBool", p, trans, err, BOOL_VALUES)
 	}
@@ -274,7 +251,7 @@ func ReadWriteBool(t testing.TB, p TProtocol, trans TTransport) {
 		}
 	}
 	for k, v := range BOOL_VALUES {
-		value, err := p.ReadBool(context.Background())
+		value, err := p.ReadBool()
 		if err != nil {
 			t.Errorf("%s: %T %T %v Error reading bool at index %v: %v", "ReadWriteBool", p, trans, err, k, v)
 		}
@@ -282,7 +259,7 @@ func ReadWriteBool(t testing.TB, p TProtocol, trans TTransport) {
 			t.Errorf("%s: index %v %v %v %v != %v", "ReadWriteBool", k, p, trans, v, value)
 		}
 	}
-	err = p.ReadListEnd(context.Background())
+	err = p.ReadListEnd()
 	if err != nil {
 		t.Errorf("%s: %T %T Unable to read list end: %q", "ReadWriteBool", p, trans, err)
 	}
@@ -291,17 +268,17 @@ func ReadWriteBool(t testing.TB, p TProtocol, trans TTransport) {
 func ReadWriteByte(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(BYTE)
 	thelen := len(BYTE_VALUES)
-	err := p.WriteListBegin(context.Background(), thetype, thelen)
+	err := p.WriteListBegin(thetype, thelen)
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error writing list begin: %q", "ReadWriteByte", p, trans, err, thetype)
 	}
 	for k, v := range BYTE_VALUES {
-		err = p.WriteByte(context.Background(), v)
+		err = p.WriteByte(v)
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error writing byte in list at index %d: %q", "ReadWriteByte", p, trans, err, k, v)
 		}
 	}
-	err = p.WriteListEnd(context.Background())
+	err = p.WriteListEnd()
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error writing list end: %q", "ReadWriteByte", p, trans, err, BYTE_VALUES)
 	}
@@ -309,7 +286,7 @@ func ReadWriteByte(t testing.TB, p TProtocol, trans TTransport) {
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error flushing list of bytes: %q", "ReadWriteByte", p, trans, err, BYTE_VALUES)
 	}
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error reading list: %q", "ReadWriteByte", p, trans, err, BYTE_VALUES)
 	}
@@ -323,7 +300,7 @@ func ReadWriteByte(t testing.TB, p TProtocol, trans TTransport) {
 		}
 	}
 	for k, v := range BYTE_VALUES {
-		value, err := p.ReadByte(context.Background())
+		value, err := p.ReadByte()
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error reading byte at index %d: %q", "ReadWriteByte", p, trans, err, k, v)
 		}
@@ -331,7 +308,7 @@ func ReadWriteByte(t testing.TB, p TProtocol, trans TTransport) {
 			t.Errorf("%s: %T %T %d != %d", "ReadWriteByte", p, trans, v, value)
 		}
 	}
-	err = p.ReadListEnd(context.Background())
+	err = p.ReadListEnd()
 	if err != nil {
 		t.Errorf("%s: %T %T Unable to read list end: %q", "ReadWriteByte", p, trans, err)
 	}
@@ -340,13 +317,13 @@ func ReadWriteByte(t testing.TB, p TProtocol, trans TTransport) {
 func ReadWriteI16(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(I16)
 	thelen := len(INT16_VALUES)
-	p.WriteListBegin(context.Background(), thetype, thelen)
+	p.WriteListBegin(thetype, thelen)
 	for _, v := range INT16_VALUES {
-		p.WriteI16(context.Background(), v)
+		p.WriteI16(v)
 	}
-	p.WriteListEnd(context.Background())
+	p.WriteListEnd()
 	p.Flush(context.Background())
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error reading list: %q", "ReadWriteI16", p, trans, err, INT16_VALUES)
 	}
@@ -360,7 +337,7 @@ func ReadWriteI16(t testing.TB, p TProtocol, trans TTransport) {
 		}
 	}
 	for k, v := range INT16_VALUES {
-		value, err := p.ReadI16(context.Background())
+		value, err := p.ReadI16()
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error reading int16 at index %d: %q", "ReadWriteI16", p, trans, err, k, v)
 		}
@@ -368,7 +345,7 @@ func ReadWriteI16(t testing.TB, p TProtocol, trans TTransport) {
 			t.Errorf("%s: %T %T %d != %d", "ReadWriteI16", p, trans, v, value)
 		}
 	}
-	err = p.ReadListEnd(context.Background())
+	err = p.ReadListEnd()
 	if err != nil {
 		t.Errorf("%s: %T %T Unable to read list end: %q", "ReadWriteI16", p, trans, err)
 	}
@@ -377,13 +354,13 @@ func ReadWriteI16(t testing.TB, p TProtocol, trans TTransport) {
 func ReadWriteI32(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(I32)
 	thelen := len(INT32_VALUES)
-	p.WriteListBegin(context.Background(), thetype, thelen)
+	p.WriteListBegin(thetype, thelen)
 	for _, v := range INT32_VALUES {
-		p.WriteI32(context.Background(), v)
+		p.WriteI32(v)
 	}
-	p.WriteListEnd(context.Background())
+	p.WriteListEnd()
 	p.Flush(context.Background())
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error reading list: %q", "ReadWriteI32", p, trans, err, INT32_VALUES)
 	}
@@ -397,7 +374,7 @@ func ReadWriteI32(t testing.TB, p TProtocol, trans TTransport) {
 		}
 	}
 	for k, v := range INT32_VALUES {
-		value, err := p.ReadI32(context.Background())
+		value, err := p.ReadI32()
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error reading int32 at index %d: %q", "ReadWriteI32", p, trans, err, k, v)
 		}
@@ -413,13 +390,13 @@ func ReadWriteI32(t testing.TB, p TProtocol, trans TTransport) {
 func ReadWriteI64(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(I64)
 	thelen := len(INT64_VALUES)
-	p.WriteListBegin(context.Background(), thetype, thelen)
+	p.WriteListBegin(thetype, thelen)
 	for _, v := range INT64_VALUES {
-		p.WriteI64(context.Background(), v)
+		p.WriteI64(v)
 	}
-	p.WriteListEnd(context.Background())
+	p.WriteListEnd()
 	p.Flush(context.Background())
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error reading list: %q", "ReadWriteI64", p, trans, err, INT64_VALUES)
 	}
@@ -433,7 +410,7 @@ func ReadWriteI64(t testing.TB, p TProtocol, trans TTransport) {
 		}
 	}
 	for k, v := range INT64_VALUES {
-		value, err := p.ReadI64(context.Background())
+		value, err := p.ReadI64()
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error reading int64 at index %d: %q", "ReadWriteI64", p, trans, err, k, v)
 		}
@@ -449,13 +426,13 @@ func ReadWriteI64(t testing.TB, p TProtocol, trans TTransport) {
 func ReadWriteDouble(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(DOUBLE)
 	thelen := len(DOUBLE_VALUES)
-	p.WriteListBegin(context.Background(), thetype, thelen)
+	p.WriteListBegin(thetype, thelen)
 	for _, v := range DOUBLE_VALUES {
-		p.WriteDouble(context.Background(), v)
+		p.WriteDouble(v)
 	}
-	p.WriteListEnd(context.Background())
+	p.WriteListEnd()
 	p.Flush(context.Background())
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %v Error reading list: %v", "ReadWriteDouble", p, trans, err, DOUBLE_VALUES)
 	}
@@ -466,7 +443,7 @@ func ReadWriteDouble(t testing.TB, p TProtocol, trans TTransport) {
 		t.Errorf("%s: %T %T len %v != len %v", "ReadWriteDouble", p, trans, thelen, thelen2)
 	}
 	for k, v := range DOUBLE_VALUES {
-		value, err := p.ReadDouble(context.Background())
+		value, err := p.ReadDouble()
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error reading double at index %d: %v", "ReadWriteDouble", p, trans, err, k, v)
 		}
@@ -478,7 +455,7 @@ func ReadWriteDouble(t testing.TB, p TProtocol, trans TTransport) {
 			t.Errorf("%s: %T %T %v != %v", "ReadWriteDouble", p, trans, v, value)
 		}
 	}
-	err = p.ReadListEnd(context.Background())
+	err = p.ReadListEnd()
 	if err != nil {
 		t.Errorf("%s: %T %T Unable to read list end: %q", "ReadWriteDouble", p, trans, err)
 	}
@@ -487,13 +464,13 @@ func ReadWriteDouble(t testing.TB, p TProtocol, trans TTransport) {
 func ReadWriteString(t testing.TB, p TProtocol, trans TTransport) {
 	thetype := TType(STRING)
 	thelen := len(STRING_VALUES)
-	p.WriteListBegin(context.Background(), thetype, thelen)
+	p.WriteListBegin(thetype, thelen)
 	for _, v := range STRING_VALUES {
-		p.WriteString(context.Background(), v)
+		p.WriteString(v)
 	}
-	p.WriteListEnd(context.Background())
+	p.WriteListEnd()
 	p.Flush(context.Background())
-	thetype2, thelen2, err := p.ReadListBegin(context.Background())
+	thetype2, thelen2, err := p.ReadListBegin()
 	if err != nil {
 		t.Errorf("%s: %T %T %q Error reading list: %q", "ReadWriteString", p, trans, err, STRING_VALUES)
 	}
@@ -507,7 +484,7 @@ func ReadWriteString(t testing.TB, p TProtocol, trans TTransport) {
 		}
 	}
 	for k, v := range STRING_VALUES {
-		value, err := p.ReadString(context.Background())
+		value, err := p.ReadString()
 		if err != nil {
 			t.Errorf("%s: %T %T %q Error reading string at index %d: %q", "ReadWriteString", p, trans, err, k, v)
 		}
@@ -522,9 +499,9 @@ func ReadWriteString(t testing.TB, p TProtocol, trans TTransport) {
 
 func ReadWriteBinary(t testing.TB, p TProtocol, trans TTransport) {
 	v := protocol_bdata
-	p.WriteBinary(context.Background(), v)
+	p.WriteBinary(v)
 	p.Flush(context.Background())
-	value, err := p.ReadBinary(context.Background())
+	value, err := p.ReadBinary()
 	if err != nil {
 		t.Errorf("%s: %T %T Unable to read binary: %s", "ReadWriteBinary", p, trans, err.Error())
 	}
@@ -537,126 +514,4 @@ func ReadWriteBinary(t testing.TB, p TProtocol, trans TTransport) {
 			}
 		}
 	}
-}
-
-func ReadWriteUUID(t testing.TB, p TProtocol, trans TTransport) {
-	ctx := context.Background()
-	thetype := TType(UUID)
-	thelen := len(UUID_VALUES)
-	p.WriteListBegin(ctx, thetype, thelen)
-	for _, v := range UUID_VALUES {
-		p.WriteUUID(ctx, v)
-	}
-	p.WriteListEnd(ctx)
-	p.Flush(ctx)
-	thetype2, thelen2, err := p.ReadListBegin(ctx)
-	if err != nil {
-		t.Errorf("%s: %T %T %q Error reading list: %q", "ReadWriteUUID", p, trans, err, STRING_VALUES)
-	}
-	_, ok := p.(*TSimpleJSONProtocol)
-	if !ok {
-		if thetype != thetype2 {
-			t.Errorf("%s: %T %T type %s != type %s", "ReadWriteUUID", p, trans, thetype, thetype2)
-		}
-		if thelen != thelen2 {
-			t.Errorf("%s: %T %T len %v != len %v", "ReadWriteUUID", p, trans, thelen, thelen2)
-		}
-	}
-	for k, v := range UUID_VALUES {
-		value, err := p.ReadUUID(ctx)
-		if err != nil {
-			t.Errorf("%s: %T %T %q Error reading UUID at index %d: %q", "ReadWriteUUID", p, trans, err, k, v)
-		}
-		if v != value {
-			t.Errorf("%s: %T %T %v != %v", "ReadWriteUUID", p, trans, v, value)
-		}
-	}
-	if err != nil {
-		t.Errorf("%s: %T %T Unable to read list end: %q", "ReadWriteUUID", p, trans, err)
-	}
-}
-
-func UnmatchedBeginEndProtocolTest(t *testing.T, protocolFactory TProtocolFactory) {
-	// NOTE: not all protocol implementations do strict state check to
-	// return an error on unmatched Begin/End calls.
-	// This test is only meant to make sure that those unmatched Begin/End
-	// calls won't cause panic. There's no real "test" here.
-	trans := NewTMemoryBuffer()
-	t.Run("Read", func(t *testing.T) {
-		t.Run("Message", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.ReadMessageEnd(context.Background())
-			p.ReadMessageEnd(context.Background())
-		})
-		t.Run("Struct", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.ReadStructEnd(context.Background())
-			p.ReadStructEnd(context.Background())
-		})
-		t.Run("Field", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.ReadFieldEnd(context.Background())
-			p.ReadFieldEnd(context.Background())
-		})
-		t.Run("Map", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.ReadMapEnd(context.Background())
-			p.ReadMapEnd(context.Background())
-		})
-		t.Run("List", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.ReadListEnd(context.Background())
-			p.ReadListEnd(context.Background())
-		})
-		t.Run("Set", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.ReadSetEnd(context.Background())
-			p.ReadSetEnd(context.Background())
-		})
-	})
-	t.Run("Write", func(t *testing.T) {
-		t.Run("Message", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.WriteMessageEnd(context.Background())
-			p.WriteMessageEnd(context.Background())
-		})
-		t.Run("Struct", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.WriteStructEnd(context.Background())
-			p.WriteStructEnd(context.Background())
-		})
-		t.Run("Field", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.WriteFieldEnd(context.Background())
-			p.WriteFieldEnd(context.Background())
-		})
-		t.Run("Map", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.WriteMapEnd(context.Background())
-			p.WriteMapEnd(context.Background())
-		})
-		t.Run("List", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.WriteListEnd(context.Background())
-			p.WriteListEnd(context.Background())
-		})
-		t.Run("Set", func(t *testing.T) {
-			trans.Reset()
-			p := protocolFactory.GetProtocol(trans)
-			p.WriteSetEnd(context.Background())
-			p.WriteSetEnd(context.Background())
-		})
-	})
-	trans.Close()
 }

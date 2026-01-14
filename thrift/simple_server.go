@@ -20,34 +20,11 @@
 package thrift
 
 import (
-	"context"
-	"errors"
-	"fmt"
-	"io"
-	"net"
+	"log"
+	"runtime/debug"
 	"sync"
 	"sync/atomic"
-	"time"
 )
-
-// ServerConnectivityCheckInterval defines the ticker interval used by
-// connectivity check in thrift compiled TProcessorFunc implementations.
-//
-// It's defined as a variable instead of constant, so that thrift server
-// implementations can change its value to control the behavior.
-//
-// If it's changed to <=0, the feature will be disabled.
-var ServerConnectivityCheckInterval = time.Millisecond * 5
-
-// ServerStopTimeout defines max stop wait duration used by
-// server stop to avoid hanging too long to wait for all client connections to be closed gracefully.
-//
-// It's defined as a variable instead of constant, so that thrift server
-// implementations can change its value to control the behavior.
-//
-// If it's set to <=0, the feature will be disabled(by default), and the server will wait for
-// for all the client connections to be closed gracefully.
-var ServerStopTimeout = time.Duration(0)
 
 /*
  * This is not a typical TSimpleServer as it is not blocked after accept a socket.
@@ -55,10 +32,9 @@ var ServerStopTimeout = time.Duration(0)
  * This will work if golang user implements a conn-pool like thing in client side.
  */
 type TSimpleServer struct {
-	closed   atomic.Int32
-	wg       sync.WaitGroup
-	mu       sync.Mutex
-	stopChan chan struct{}
+	closed int32
+	wg     sync.WaitGroup
+	mu     sync.Mutex
 
 	processorFactory       TProcessorFactory
 	serverTransport        TServerTransport
@@ -69,8 +45,6 @@ type TSimpleServer struct {
 
 	// Headers to auto forward in THeaderProtocol
 	forwardHeaders []string
-
-	logger Logger
 }
 
 func NewTSimpleServer2(processor TProcessor, serverTransport TServerTransport) *TSimpleServer {
@@ -123,7 +97,6 @@ func NewTSimpleServerFactory6(processorFactory TProcessorFactory, serverTranspor
 		outputTransportFactory: outputTransportFactory,
 		inputProtocolFactory:   inputProtocolFactory,
 		outputProtocolFactory:  outputProtocolFactory,
-		stopChan:               make(chan struct{}),
 	}
 }
 
@@ -175,19 +148,11 @@ func (p *TSimpleServer) SetForwardHeaders(headers []string) {
 	p.forwardHeaders = keys
 }
 
-// SetLogger sets the logger used by this TSimpleServer.
-//
-// If no logger was set before Serve is called, a default logger using standard
-// log library will be used.
-func (p *TSimpleServer) SetLogger(logger Logger) {
-	p.logger = logger
-}
-
 func (p *TSimpleServer) innerAccept() (int32, error) {
 	client, err := p.serverTransport.Accept()
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	closed := p.closed.Load()
+	closed := atomic.LoadInt32(&p.closed)
 	if closed != 0 {
 		return closed, nil
 	}
@@ -195,25 +160,11 @@ func (p *TSimpleServer) innerAccept() (int32, error) {
 		return 0, err
 	}
 	if client != nil {
-		ctx, cancel := context.WithCancel(context.Background())
-		p.wg.Add(2)
-
+		p.wg.Add(1)
 		go func() {
 			defer p.wg.Done()
-			defer cancel()
 			if err := p.processRequests(client); err != nil {
-				p.logger(fmt.Sprintf("error processing request: %v", err))
-			}
-		}()
-
-		go func() {
-			defer p.wg.Done()
-			select {
-			case <-ctx.Done():
-				// client exited, do nothing
-			case <-p.stopChan:
-				// TSimpleServer.Close called, close the client connection
-				client.Close()
+				log.Println("error processing request:", err)
 			}
 		}()
 	}
@@ -233,8 +184,6 @@ func (p *TSimpleServer) AcceptLoop() error {
 }
 
 func (p *TSimpleServer) Serve() error {
-	p.logger = fallbackLogger(p.logger)
-
 	err := p.Listen()
 	if err != nil {
 		return err
@@ -246,58 +195,16 @@ func (p *TSimpleServer) Serve() error {
 func (p *TSimpleServer) Stop() error {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-
-	if !p.closed.CompareAndSwap(0, 1) {
-		// Already closed
+	if atomic.LoadInt32(&p.closed) != 0 {
 		return nil
 	}
+	atomic.StoreInt32(&p.closed, 1)
 	p.serverTransport.Interrupt()
-
-	ctx, cancel := context.WithCancel(context.Background())
-	go func() {
-		defer cancel()
-		p.wg.Wait()
-	}()
-
-	if ServerStopTimeout > 0 {
-		timer := time.NewTimer(ServerStopTimeout)
-		select {
-		case <-timer.C:
-		case <-ctx.Done():
-		}
-		close(p.stopChan)
-		timer.Stop()
-	}
-
-	<-ctx.Done()
-	p.stopChan = make(chan struct{})
+	p.wg.Wait()
 	return nil
 }
 
-// If err is actually EOF or NOT_OPEN, return nil, otherwise return err as-is.
-func treatEOFErrorsAsNil(err error) error {
-	if err == nil {
-		return nil
-	}
-	if errors.Is(err, io.EOF) {
-		return nil
-	}
-	var te TTransportException
-	// NOT_OPEN returned by processor.Process is usually caused by client
-	// abandoning the connection (e.g. client side time out, or just client
-	// closes connections from the pool because of shutting down).
-	// Those logs will be very noisy, so suppress those logs as well.
-	if errors.As(err, &te) && (te.TypeId() == END_OF_FILE || te.TypeId() == NOT_OPEN) {
-		return nil
-	}
-	return err
-}
-
-func (p *TSimpleServer) processRequests(client TTransport) (err error) {
-	defer func() {
-		err = treatEOFErrorsAsNil(err)
-	}()
-
+func (p *TSimpleServer) processRequests(client TTransport) error {
 	processor := p.processorFactory.GetProcessor(client)
 	inputTransport, err := p.inputTransportFactory.GetTransport(client)
 	if err != nil {
@@ -322,6 +229,12 @@ func (p *TSimpleServer) processRequests(client TTransport) (err error) {
 		outputProtocol = p.outputProtocolFactory.GetProtocol(outputTransport)
 	}
 
+	defer func() {
+		if e := recover(); e != nil {
+			log.Printf("panic in processor: %s: %s", e, debug.Stack())
+		}
+	}()
+
 	if inputTransport != nil {
 		defer inputTransport.Close()
 	}
@@ -329,16 +242,11 @@ func (p *TSimpleServer) processRequests(client TTransport) (err error) {
 		defer outputTransport.Close()
 	}
 	for {
-		if p.closed.Load() != 0 {
+		if atomic.LoadInt32(&p.closed) != 0 {
 			return nil
 		}
 
-		ctx := SetResponseHelper(
-			defaultCtx,
-			TResponseHelper{
-				THeaderResponseHelper: NewTHeaderResponseHelper(outputProtocol),
-			},
-		)
+		ctx := defaultCtx
 		if headerProtocol != nil {
 			// We need to call ReadFrame here, otherwise we won't
 			// get any headers on the AddReadTHeaderToContext call.
@@ -346,28 +254,20 @@ func (p *TSimpleServer) processRequests(client TTransport) (err error) {
 			// ReadFrame is safe to be called multiple times so it
 			// won't break when it's called again later when we
 			// actually start to read the message.
-			if err := headerProtocol.ReadFrame(ctx); err != nil {
+			if err := headerProtocol.ReadFrame(); err != nil {
 				return err
 			}
-			ctx = AddReadTHeaderToContext(ctx, headerProtocol.GetReadHeaders())
+			ctx = AddReadTHeaderToContext(defaultCtx, headerProtocol.GetReadHeaders())
 			ctx = SetWriteHeaderList(ctx, p.forwardHeaders)
 		}
 
 		ok, err := processor.Process(ctx, inputProtocol, outputProtocol)
-		if errors.Is(err, ErrAbandonRequest) {
-			err := client.Close()
-			if errors.Is(err, net.ErrClosed) {
-				// In this case, it's kinda expected to get
-				// net.ErrClosed, treat that as no-error
-				return nil
-			}
+		if err, ok := err.(TTransportException); ok && err.TypeId() == END_OF_FILE {
+			return nil
+		} else if err != nil {
 			return err
 		}
-		if errors.As(err, new(TTransportException)) && err != nil {
-			return err
-		}
-		var tae TApplicationException
-		if errors.As(err, &tae) && tae.TypeId() == UNKNOWN_METHOD {
+		if err, ok := err.(TApplicationException); ok && err.TypeId() == UNKNOWN_METHOD {
 			continue
 		}
 		if !ok {
@@ -375,29 +275,4 @@ func (p *TSimpleServer) processRequests(client TTransport) (err error) {
 		}
 	}
 	return nil
-}
-
-// ErrAbandonRequest is a special error that server handler implementations can
-// return to indicate that the request has been abandoned.
-//
-// TSimpleServer and compiler generated Process functions will check for this
-// error, and close the client connection instead of trying to write the error
-// back to the client.
-//
-// It shall only be used when the server handler implementation know that the
-// client already abandoned the request (by checking that the passed in context
-// is already canceled, for example).
-//
-// It also implements the interface defined by errors.Unwrap and always unwrap
-// to context.Canceled error.
-var ErrAbandonRequest = abandonRequestError{}
-
-type abandonRequestError struct{}
-
-func (abandonRequestError) Error() string {
-	return "request abandoned"
-}
-
-func (abandonRequestError) Unwrap() error {
-	return context.Canceled
 }

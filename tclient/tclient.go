@@ -9,12 +9,12 @@ import (
 )
 
 // NewTClient 创建thrift客户端
-func NewTClient(newFunc, clientPtrPtr interface{}, ip string, port int) (transport thrift.TTransport, err error) {
+func NewTClient(newFunc, clientPtrPtr interface{}, ip string, port int) (err error) {
 	socket, err := thrift.NewTSocket(ip + ":" + strconv.Itoa(port))
 	if err != nil {
 		return
 	}
-	transport = thrift.NewTBufferedTransport(socket, 8192)
+	transport := thrift.NewTBufferedTransport(socket, 8192)
 	err = transport.Open()
 	if err != nil {
 		return
