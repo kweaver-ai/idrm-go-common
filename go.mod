@@ -2,8 +2,6 @@ module github.com/kweaver-ai/idrm-go-common
 
 go 1.24.0
 
-toolchain go1.24.11
-
 require (
 	github.com/IBM/sarama v1.42.1
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
