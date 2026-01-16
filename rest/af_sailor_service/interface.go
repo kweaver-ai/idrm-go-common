@@ -10,6 +10,17 @@ type Driven interface {
 	UpdateGraph(ctx context.Context, detail *ModelDetail) (*base.IntIDResp, error)
 	DeleteGraph(ctx context.Context, graphID int) (*base.IntIDResp, error)
 	GraphBuildTask(ctx context.Context, req *GraphBuildTaskReq) (*base.IntIDResp, error)
+
+	RecTable(ctx context.Context, req *RecTableReq, userId string) (*RecTableResp, error)
+	RecFlow(ctx context.Context, req *RecFlowReq, userId string) (*RecFlowResp, error)
+	RecCode(ctx context.Context, req *RecCodeReq) (*RecCodeResp, error)
+	RecCheckCode(ctx context.Context, req *CheckCodeReq) (*CheckCodeResp, error)
+	RecView(ctx context.Context, req *RecViewReq) (*RecViewResp, error)
+	GraphNeighbors(ctx context.Context, req *GraphNeighborsReq) (*GraphNeighborsResp, error)
+	GraphFullText(ctx context.Context, req *GraphFullTextReq) (*GraphFullTextResp, error)
+	LogicalViewDataCategorize(ctx context.Context, req *LogicalViewDatacategorizeReq) (*LogicalViewDataCategorizeResp, error)
+	TableCompletionTableInfo(ctx context.Context, req *TableCompletionTableInfoReqBody, authorization string) (*TableCompletionTableInfoResp, error)
+	TableCompletionAll(ctx context.Context, req *TableCompletionReqBody, authorization string) (*TableCompletionResp, error)
 }
 
 type ModelDetail struct {
