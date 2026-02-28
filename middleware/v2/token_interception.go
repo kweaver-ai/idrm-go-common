@@ -32,7 +32,7 @@ func (m *Middleware) TokenInterception() func(next http.HandlerFunc) http.Handle
 				return
 			}
 
-			info, err := m.hydra.Introspect(newCtx, token)
+			info, err := m.hydra.IntrospectV2(newCtx, token)
 			if err != nil {
 				log.WithContext(r.Context()).Error("Token Introspect", zap.Error(err))
 				gozerox.AbortResponseWithCode(w, http.StatusBadRequest, errorcode.Desc(errorcode.HydraException))

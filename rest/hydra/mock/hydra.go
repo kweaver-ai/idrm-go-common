@@ -130,6 +130,45 @@ func (m *MockHydra) Introspect(arg0 context.Context, arg1 string) (hydra.TokenIn
 	return ret0, ret1
 }
 
+// IntrospectV2 mocks base method.
+func (m *MockHydra) IntrospectV2(arg0 context.Context, arg1 string) (hydra.TokenIntrospectInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IntrospectV2", arg0, arg1)
+	ret0, _ := ret[0].(hydra.TokenIntrospectInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IntrospectV2 indicates an expected call of IntrospectV2.
+func (mr *MockHydraMockRecorder) IntrospectV2(arg0, arg1 any) *MockHydraIntrospectV2Call {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IntrospectV2", reflect.TypeOf((*MockHydra)(nil).IntrospectV2), arg0, arg1)
+	return &MockHydraIntrospectV2Call{Call: call}
+}
+
+// MockHydraIntrospectV2Call wrap *gomock.Call
+type MockHydraIntrospectV2Call struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockHydraIntrospectV2Call) Return(arg0 hydra.TokenIntrospectInfo, arg1 error) *MockHydraIntrospectV2Call {
+	c.Call = c.Call.Return(arg0, arg1)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockHydraIntrospectV2Call) Do(f func(context.Context, string) (hydra.TokenIntrospectInfo, error)) *MockHydraIntrospectV2Call {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockHydraIntrospectV2Call) DoAndReturn(f func(context.Context, string) (hydra.TokenIntrospectInfo, error)) *MockHydraIntrospectV2Call {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // Introspect indicates an expected call of Introspect.
 func (mr *MockHydraMockRecorder) Introspect(arg0, arg1 any) *MockHydraIntrospectCall {
 	mr.mock.ctrl.T.Helper()

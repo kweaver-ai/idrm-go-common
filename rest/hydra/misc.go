@@ -59,6 +59,8 @@ const (
 type Hydra interface {
 	// Introspect token内省
 	Introspect(ctx context.Context, token string) (info TokenIntrospectInfo, err error)
+	// IntrospectV2 token内省（无trace）
+	IntrospectV2(ctx context.Context, token string) (info TokenIntrospectInfo, err error)
 	GetClientNameById(ctx context.Context, id string) (clientName string, err error)
 	RegistCredentialClient(ctx context.Context, name, password string) (clientID string, err error)
 	GetClientCredentialToken(ctx context.Context, clientID, clientSecret string) (token string, expiresIn int64, err error)
