@@ -11,7 +11,7 @@ import (
 	"github.com/kweaver-ai/idrm-go-common/interception"
 	"github.com/kweaver-ai/idrm-go-common/rest/hydra"
 	"github.com/kweaver-ai/idrm-go-frame/core/telemetry/log"
-	"github.com/kweaver-ai/idrm-go-frame/core/telemetry/trace"
+	// "github.com/kweaver-ai/idrm-go-frame/core/telemetry/trace"
 	"github.com/kweaver-ai/idrm-go-frame/core/transport/rest/gozerox"
 	"go.uber.org/zap"
 )
@@ -21,8 +21,9 @@ func (m *Middleware) TokenInterception() func(next http.HandlerFunc) http.Handle
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			var err error
-			newCtx, span := trace.StartInternalSpan(r.Context())
-			defer func() { trace.TelemetrySpanEnd(span, err) }()
+			// newCtx, span := trace.StartInternalSpan(r.Context())
+			// defer func() { trace.TelemetrySpanEnd(span, err) }()
+			newCtx := r.Context()
 
 			tokenID := r.Header.Get("Authorization")
 			token := strings.TrimPrefix(tokenID, "Bearer ")
