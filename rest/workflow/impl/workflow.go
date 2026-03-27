@@ -31,7 +31,7 @@ func NewWorkflowDriven(client *http.Client) workflow.WorkflowDriven {
 func (c *WorkflowDriven) GetAuditProcessDefinition(ctx context.Context, procDefKey string) (res *workflow.ProcessDefinitionGetRes, err error) {
 	errorMsg := "WorkFlowDriven GetAuditProcessDefinition "
 
-	urlStr := fmt.Sprintf("%s/api/workflow-rest/v1/process-definition/%s", c.workflowRestURL, procDefKey)
+	urlStr := fmt.Sprintf("%s/api/flow-audit-config/v1/process-definition/%s", c.workflowRestURL, procDefKey)
 
 	log.Infof(errorMsg+" url:%s \n", urlStr)
 
@@ -61,7 +61,7 @@ func (c *WorkflowDriven) GetAuditList(ctx context.Context, listType workflow.Wor
 		"limit":  []string{fmt.Sprint(limit)},
 	}
 
-	urlStr := fmt.Sprintf("%s/api/doc-audit-rest/v1/doc-audit/%s?%s", c.docAuditRestURL, listType, values.Encode())
+	urlStr := fmt.Sprintf("%s/api/flow-audit-core/v1/doc-audit/%s?%s", c.docAuditRestURL, listType, values.Encode())
 
 	log.Infof(errorMsg+" url:%s \n", urlStr)
 
@@ -84,7 +84,7 @@ func (c *WorkflowDriven) GetAuditList(ctx context.Context, listType workflow.Wor
 
 func (c *WorkflowDriven) GetAuditLogsByProcInstID(ctx context.Context, procInstID string) ([]*workflow.AuditNodeLog, error) {
 	errorMsg := "WorkFlowDriven GetAuditLogsByProcInstID "
-	urlStr := fmt.Sprintf("%s/api/workflow-rest/v1/process-instance/%s/logs", c.workflowRestURL, procInstID)
+	urlStr := fmt.Sprintf("%s/api/flow-audit-config/v1/process-instance/%s/logs", c.workflowRestURL, procInstID)
 
 	log.Infof(errorMsg+" url:%s \n", urlStr)
 

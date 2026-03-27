@@ -47,7 +47,7 @@ func NewForHTTPClient(client *http.Client) (DocAuditRestV1Interface, error) {
 	if err != nil {
 		return nil, err
 	}
-	b.Path = path.Join(b.Path, "/api/doc-audit-rest/v1")
+	b.Path = path.Join(b.Path, "/api/flow-audit-core/v1")
 	return New(b, client), nil
 }
 
