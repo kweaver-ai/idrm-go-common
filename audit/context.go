@@ -3,6 +3,8 @@ package audit
 import (
 	"context"
 	"errors"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -47,6 +49,11 @@ type CustomContext interface {
 
 // SetCustomContext sets the logger in the context.
 func SetCustomContext(ctx CustomContext, logger Logger) {
+	ctx.Set(contextKey{}.String(), logger)
+}
+
+// SetGinCustomContext sets the logger in the context.
+func SetGinCustomContext(ctx *gin.Context, logger Logger) {
 	ctx.Set(contextKey{}.String(), logger)
 }
 

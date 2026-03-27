@@ -32,7 +32,7 @@ func AuditLogger(logger audit.Logger, configurationCenter configuration_center.D
 		// save operator into context
 		//  1. gin.Context
 		//  2. http.Request.Context
-		audit.SetCustomContext(c, logger)
+		audit.SetGinCustomContext(c, logger)
 		c.Request = c.Request.WithContext(audit.NewContext(c.Request.Context(), logger))
 	}
 }
