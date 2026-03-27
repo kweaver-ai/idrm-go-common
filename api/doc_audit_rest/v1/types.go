@@ -64,7 +64,7 @@ type ApplyListOptions struct {
 	Status AuditStatus `json:"status,omitempty"`
 }
 
-// 代表 GET /api/doc-audit-rest/v1/doc-audit/tasks 返回数据的 .apply_detail
+// 代表 GET /api/flow-audit-core/v1/doc-audit/tasks 返回数据的 .apply_detail
 //
 // 可能代表申请或审核的详情
 //
@@ -73,14 +73,14 @@ type ApplyDetail struct {
 	Process ApplyDetailProcess `json:"process,omitempty"`
 }
 
-// 代表 GET /api/doc-audit-rest/v1/doc-audit/tasks 返回数据的 .apply_detail.process
+// 代表 GET /api/flow-audit-core/v1/doc-audit/tasks 返回数据的 .apply_detail.process
 //
 // TODO: 明确资源定义
 type ApplyDetailProcess struct {
 	ApplyID string `json:"apply_id,omitempty"`
 }
 
-// 代表 GET /api/doc-audit-rest/v1/doc-audit/tasks 返回的数据
+// 代表 GET /api/flow-audit-core/v1/doc-audit/tasks 返回的数据
 //
 // TODO: 与 Apply 相似，需要明确资源定义
 type Task struct {
@@ -98,7 +98,7 @@ type Task struct {
 	AuditStatus AuditStatus `json:"audit_status,omitempty"`
 }
 
-// 代表 GET /api/doc-audit-rest/v1/doc-audit/tasks 返回的数据
+// 代表 GET /api/flow-audit-core/v1/doc-audit/tasks 返回的数据
 //
 // TODO: 与 Apply 相似，需要明确资源定义
 type TaskList meta.List[Task]
@@ -112,7 +112,7 @@ type TaskListOptions struct {
 	Status AuditStatus `json:"status,omitempty"`
 }
 
-// 代表 GET /api/doc-audit-rest/v1/doc-audit/historys 返回的数据
+// 代表 GET /api/flow-audit-core/v1/doc-audit/historys 返回的数据
 //
 // TODO: 与 Apply 相似，需要明确资源定义
 type History struct {
@@ -129,7 +129,7 @@ type History struct {
 	AuditStatus AuditStatus `json:"audit_status,omitempty"`
 }
 
-// 代表 GET /api/doc-audit-rest/v1/doc-audit/historys 返回的数据
+// 代表 GET /api/flow-audit-core/v1/doc-audit/historys 返回的数据
 //
 // TODO: 与 Apply 相似，需要明确资源定义
 type HistoryList meta.List[History]

@@ -24,7 +24,7 @@ func NewDocAuditDriven(client *http.Client) workflow.DocAuditDriven {
 }
 
 func (c *DocAuditDriven) GetMyTodoList(ctx context.Context, req *workflow.GetMyTodoListReq) (res *workflow.GetMyTodoListRes, err error) {
-	fullURL := fmt.Sprintf("%s/api/doc-audit-rest/v1/doc-audit/tasks?doc_name=%s&type=%s&abstracts=%s&limit=%d&offset=%d",
+	fullURL := fmt.Sprintf("%s/api/flow-audit-core/v1/doc-audit/tasks?doc_name=%s&type=%s&abstracts=%s&limit=%d&offset=%d",
 		c.baseURL,
 		url.QueryEscape(req.DocName),
 		url.QueryEscape(strings.Join(req.Type, ",")),
