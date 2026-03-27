@@ -258,6 +258,8 @@ type UserBase struct {
 	ID string `json:"id,omitempty"`
 	// 用户显示名
 	Name string `json:"name,omitempty"`
+	//用户状态， 1正常， 2删除
+	Status int32 `json:"status"`
 }
 
 // DepartmentPath 定义用户部门的层级结构，由高到低。

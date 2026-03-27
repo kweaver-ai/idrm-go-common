@@ -124,8 +124,8 @@ type ServiceConfig struct {
 	MetaDataHost               string `env:"METADATA_HOST" host:"af-vega-metadata:80"`
 	DataApplicationServiceHost string `env:"DATA_APPLICATION_SERVICE_HOST" host:"data-application-service:8156"`
 	StandardizationHost        string `env:"STANDARDIZATION_HOST" host:"standardization:80"`
-	WorkFlowRestHost           string `env:"WORKFLOW_REST_HOST" host:"workflow-rest:9800"`
-	DocAuditRestHost           string `env:"DOC_AUDIT_REST_HOST" host:"doc-audit-rest:9800"`
+	WorkFlowRestHost           string `env:"WORKFLOW_REST_HOST"  host:"flow-audit-config:9800"`
+	DocAuditRestHost           string `env:"DOC_AUDIT_REST_HOST" host:"flow-audit-core:9800"`
 	// AnyRobot host, such as https://anyrobot.example.org
 	AnyRobotHost         string `env:"ANYROBOT_HOST"`
 	VirtualEngineHost    string `env:"VIRTUAL_ENGINE_HOST" host:"af-vega-gateway:8099"`
@@ -139,6 +139,7 @@ type ServiceConfig struct {
 	AfSailorServiceHost      string `env:"AF_SAILOR_SERVICE_HOST" host:"af-sailor-service:80"`
 	AuthorizationPublicHost  string `env:"AUTHORIZATION_PUBLIC_HOST" host:"authorization-public:30920"`
 	AuthorizationPrivateHost string `env:"AUTHORIZATION_PRIVATE_HOST" host:"authorization-private:30920"`
+	StudioWebServiceHost     string `env:"STUDIO_WEB_SERVICE_HOST" host:"studio-web-service:8877"`
 }
 
 func fixSchema(s string) string {

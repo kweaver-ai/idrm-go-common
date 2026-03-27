@@ -965,3 +965,8 @@ func (c *ConfigurationCenterDriven) GetBusinessMatterPage(ctx context.Context, r
 		return res, errors.New(errorMsg + string(body))
 	}
 }
+
+func (c *ConfigurationCenterDriven) GetAllMenuKeyAndResourceType(ctx context.Context) (map[string]string, error) {
+	url := c.baseURL + "/api/internal/configuration-center/v1/menus"
+	return base.GET[map[string]string](ctx, c.client, url, nil)
+}

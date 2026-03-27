@@ -36,6 +36,7 @@ import (
 	scene_analysis_impl "github.com/kweaver-ai/idrm-go-common/rest/scene_analysis/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/standardization"
 	standardization_impl "github.com/kweaver-ai/idrm-go-common/rest/standardization/impl"
+	studio_web_impl "github.com/kweaver-ai/idrm-go-common/rest/studio_web/impl"
 	task_center "github.com/kweaver-ai/idrm-go-common/rest/task_center"
 	task_center_impl "github.com/kweaver-ai/idrm-go-common/rest/task_center/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/user_management"
@@ -92,6 +93,7 @@ var Set = wire.NewSet(
 	auth_service_v1.NewInternalForBase,
 	user_management.NewUserMgntByService,
 	authorization_impl.NewDriven,
+	studio_web_impl.NewDriven,
 
 	label_impl.NewBigDataDriven,
 	points_management_impl.NewPointsEventPubRepoImpl,

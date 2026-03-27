@@ -23,6 +23,7 @@ type Driven interface {
 	Generate(ctx context.Context, id string, count int) (*CodeList, error)
 	GetBusinessMatters(ctx context.Context, ids []string) (res []*BusinessMattersObject, err error)
 	GetBusinessMatterPage(ctx context.Context, req *GetBusinessMatterPageReq) (res *GetBusinessMatterPageRes, err error)
+	GetAllMenuKeyAndResourceType(ctx context.Context) (map[string]string, error)
 }
 
 type ApplicationService interface {

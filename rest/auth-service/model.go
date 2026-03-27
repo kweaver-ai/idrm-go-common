@@ -1,21 +1,22 @@
 package auth_service
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/kweaver-ai/idrm-go-frame/core/enum"
 	"github.com/kweaver-ai/idrm-go-frame/core/transport/rest/ginx"
-	"github.com/gin-gonic/gin"
 )
 
 type EnumAction enum.Object
 
 var (
-	ActionCreate  = enum.New[EnumAction](1, "create", "创建")
-	ActionUpdate  = enum.New[EnumAction](2, "update", "编辑")
-	ActionRead    = enum.New[EnumAction](3, "read", "查询")
-	ActionDelete  = enum.New[EnumAction](4, "delete", "删除")
-	ActionImport  = enum.New[EnumAction](5, "import", "导入")
-	ActionOffline = enum.New[EnumAction](6, "offline", "下线")
-	ActionOnline  = enum.New[EnumAction](7, "online", "上线")
+	ActionCreate   = enum.New[EnumAction](1, "create", "创建")
+	ActionUpdate   = enum.New[EnumAction](2, "update", "编辑")
+	ActionRead     = enum.New[EnumAction](3, "read", "查询")
+	ActionDelete   = enum.New[EnumAction](4, "delete", "删除")
+	ActionImport   = enum.New[EnumAction](5, "import", "导入")
+	ActionOffline  = enum.New[EnumAction](6, "offline", "下线")
+	ActionOnline   = enum.New[EnumAction](7, "online", "上线")
+	ActionClassify = enum.New[EnumAction](8, "classify", "分类")
 )
 
 var ActionValueList = enum.Values("EnumAction")

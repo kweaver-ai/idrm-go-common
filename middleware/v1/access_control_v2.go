@@ -13,6 +13,8 @@ import (
 	"github.com/kweaver-ai/idrm-go-frame/core/transport/rest/ginx"
 )
 
+var keyResourceDict map[string]string
+
 func GetUserIDFromContext(c *gin.Context) string {
 	if c.Value(interception.TokenTypeClient) != nil && c.Value(interception.TokenTypeClient).(int) == interception.TokenTypeClient {
 		return c.Request.Header.Get("userId")
@@ -40,16 +42,27 @@ func (m *Middleware) checkResourceAuth(action string, menuKeys ...string) gin.Ha
 		//尝试从context里面获取下
 		if len(menuKeys) <= 0 {
 			//没有标注的，放过
-			menuKeyStr, exists := c.Get(middleware.API_MENU_KEY)
+			menuKeyAny, exists := c.Get(middleware.API_MENU_KEY)
 			if !exists {
 				c.Next()
 				return
 			}
-			menuKeys = strings.Split(menuKeyStr.(string), ",")
-			if len(menuKeys) <= 0 {
+			menuKeyStr, ok := menuKeyAny.(string)
+			if !ok || menuKeyStr == "" {
 				c.Next()
 				return
 			}
+			menuKeys = strings.Split(menuKeyStr, ",")
+		}
+		//加载缓存
+		if len(keyResourceDict) <= 0 {
+			ds, err := m.configurationCenterDriven.GetAllMenuKeyAndResourceType(c)
+			if err != nil {
+				log.Warnf("GetAllMenuKeyAndResourceType error %v", err)
+				c.Next()
+				return
+			}
+			keyResourceDict = ds
 		}
 		//获取用户ID
 		userID := GetUserIDFromContext(c)
@@ -59,6 +72,16 @@ func (m *Middleware) checkResourceAuth(action string, menuKeys ...string) gin.Ha
 		}
 		//当前还不知道怎么处理结果
 		for _, menuKey := range menuKeys {
+			//找到资源类型
+			resourceType, ok := keyResourceDict[menuKey]
+			if !ok {
+				continue
+			}
+			//没有就设置个默认的
+			if resourceType == "" {
+				resourceType = authorization.RESOURCE_TYPE_MENUS
+			}
+			//鉴权
 			authReq := &authorization.OperationCheckArgs{
 				Accessor: authorization.Accessor{
 					ID:   userID,
@@ -66,7 +89,7 @@ func (m *Middleware) checkResourceAuth(action string, menuKeys ...string) gin.Ha
 				},
 				Resource: authorization.ResourceObject{
 					ID:   menuKey,
-					Type: authorization.RESOURCE_TYPE_MENUS,
+					Type: resourceType,
 				},
 				Operation: []string{action},
 				Include:   []string{authorization.INCLUDE_OPERATION_OBLIGATIONS},
