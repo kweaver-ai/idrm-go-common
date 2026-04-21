@@ -62,8 +62,8 @@ var InnerBusinessRoles = []string{
 
 // 数据视图查询操作
 const (
-	VIEW_OPERATION_DATA_QUERY  = "data-query"  // 数据查询
-	VIEW_OPERATION_VIEW_DETAIL = "view-detail" // 查看
+	VIEW_OPERATION_DATA_QUERY  = "data_query"  // 数据查询
+	VIEW_OPERATION_VIEW_DETAIL = "view_detail" // 查看
 	VIEW_OPERATION_MODIFY      = "modify"      // 修改
 	VIEW_OPERATION_DELETE      = "delete"      // 删除
 )
