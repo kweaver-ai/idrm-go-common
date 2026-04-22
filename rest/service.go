@@ -18,6 +18,7 @@ import (
 	data_application_service_impl "github.com/kweaver-ai/idrm-go-common/rest/data_application_service/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/data_catalog"
 	data_catalog_impl "github.com/kweaver-ai/idrm-go-common/rest/data_catalog/impl"
+	data_model_impl "github.com/kweaver-ai/idrm-go-common/rest/data_model/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/data_subject"
 	"github.com/kweaver-ai/idrm-go-common/rest/data_subject/data_subject_impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/data_view"
@@ -98,4 +99,5 @@ var Set = wire.NewSet(
 	label_impl.NewBigDataDriven,
 	points_management_impl.NewPointsEventPubRepoImpl,
 	demand_management_impl.NewDemandManagementDriven,
+	data_model_impl.NewDrivenImpl,
 )
