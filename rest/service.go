@@ -9,6 +9,7 @@ import (
 	auth_service_v1 "github.com/kweaver-ai/idrm-go-common/rest/auth-service/v1"
 	"github.com/kweaver-ai/idrm-go-common/rest/authorization"
 	authorization_impl "github.com/kweaver-ai/idrm-go-common/rest/authorization/impl"
+	automation_impl "github.com/kweaver-ai/idrm-go-common/rest/automation/impl"
 	basic_bigdata_service_impl "github.com/kweaver-ai/idrm-go-common/rest/basic_bigdata_service/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/business_grooming"
 	business_grooming_impl "github.com/kweaver-ai/idrm-go-common/rest/business_grooming/impl"
@@ -100,4 +101,5 @@ var Set = wire.NewSet(
 	points_management_impl.NewPointsEventPubRepoImpl,
 	demand_management_impl.NewDemandManagementDriven,
 	data_model_impl.NewDrivenImpl,
+	automation_impl.NewDriven,
 )

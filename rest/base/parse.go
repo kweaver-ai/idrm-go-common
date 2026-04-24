@@ -39,7 +39,7 @@ func NewRequest(ctx context.Context, method, path string, args any) (*http.Reque
 		}
 		value = value.Elem()
 	}
-	if value.Kind() != reflect.Struct && value.Kind() != reflect.Slice {
+	if value.Kind() != reflect.Struct && value.Kind() != reflect.Slice && value.Kind() != reflect.Map {
 		panic("req param T must struct slice or map")
 	}
 
@@ -56,6 +56,13 @@ func NewRequest(ctx context.Context, method, path string, args any) (*http.Reque
 	if value.Kind() == reflect.Slice {
 		for i := 0; i < value.Len(); i++ {
 			bodyValueSlice = append(bodyValueSlice, value.Index(i).Interface())
+		}
+	} else if value.Kind() == reflect.Map {
+		iter := value.MapRange()
+		for iter.Next() {
+			k := iter.Key()
+			v := iter.Value()
+			bodyValues[k.String()] = v.Interface()
 		}
 	} else {
 		//只处理最外层参数

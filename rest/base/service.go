@@ -141,6 +141,7 @@ type ServiceConfig struct {
 	AuthorizationPrivateHost string `env:"AUTHORIZATION_PRIVATE_HOST" host:"authorization-private:30920"`
 	StudioWebServiceHost     string `env:"STUDIO_WEB_SERVICE_HOST" host:"studio-web-service:8877"`
 	MDLDataModelServiceHost  string `env:"MDL_DATA_MODEL_SERVICE_HOST" host:"mdl-data-model-svc:13020"`
+	AutomationPublicHost     string `env:"AUTOMATION_PUBLIC_HOST" host:"flow-automation:8680"`
 }
 
 func fixSchema(s string) string {
