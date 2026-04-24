@@ -2,6 +2,7 @@ package impl
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"net/http"
@@ -24,6 +25,26 @@ func NewDriven(client *http.Client) driven.Driven {
 
 func (d drivenImpl) publicPath(uri string) string {
 	return d.publicBaseURL + uri
+}
+
+func (d drivenImpl) DagByName(ctx context.Context, name string) (*driven.DagMeta, error) {
+	args := driven.DagListArgs{
+		Keyword: name,
+		Limit:   50,
+		Page:    1,
+		SortBy:  "updated_at",
+		Order:   "desc",
+	}
+	dags, err := d.DagList(ctx, &args)
+	if err != nil {
+		return nil, err
+	}
+	for _, dag := range dags.Dags {
+		if dag.Title == name {
+			return dag, nil
+		}
+	}
+	return nil, errors.New("流程不存在")
 }
 
 func (d drivenImpl) DagList(ctx context.Context, req *driven.DagListArgs) (*driven.DagListResp, error) {

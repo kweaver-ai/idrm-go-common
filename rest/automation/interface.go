@@ -4,6 +4,7 @@ import "context"
 
 // Driven 对 flow-automation 服务的 REST 包装。
 type Driven interface {
+	DagByName(ctx context.Context, name string) (*DagMeta, error)
 	// DagList 获取流程元数据列表。
 	DagList(ctx context.Context, req *DagListArgs) (*DagListResp, error)
 	// DagDetail 获取指定流程定义详情。
