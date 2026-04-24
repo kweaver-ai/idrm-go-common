@@ -68,6 +68,19 @@ const (
 	VIEW_OPERATION_DELETE      = "delete"      // 删除
 )
 
+var viewOperationDisplayMap = map[string]string{
+	VIEW_OPERATION_DATA_QUERY:  "数据查询",
+	VIEW_OPERATION_VIEW_DETAIL: "查看",
+	VIEW_OPERATION_MODIFY:      "修改",
+	VIEW_OPERATION_DELETE:      "删除",
+}
+
+func GetViewOperationDisplay(operations []string) []string {
+	return lo.Map(operations, func(operation string, _ int) string {
+		return viewOperationDisplayMap[operation]
+	})
+}
+
 // innerBusinessRoleMap 内置角色映射
 var innerBusinessRoleMap = lo.SliceToMap(InnerBusinessRoles, func(item string) (string, bool) {
 	return item, true
