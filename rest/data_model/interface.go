@@ -26,8 +26,6 @@ type DataModel struct {
 	Operations     []string `json:"operations"`
 	Fields         []Field  `json:"fields"`
 	ModuleType     string   `json:"module_type"`
-	Creator        string   `json:"creator"`
-	Updater        string   `json:"updater"`
 	MetadataFormId string   `json:"metadata_form_id"`
 	PrimaryKeys    []any    `json:"primary_keys"`
 	SqlStr         string   `json:"sql_str"`
