@@ -31,7 +31,7 @@ func (d drivenImpl) DagByName(ctx context.Context, name string) (*driven.DagMeta
 	args := driven.DagListArgs{
 		Keyword: name,
 		Limit:   50,
-		Page:    1,
+		Page:    0,
 		SortBy:  "updated_at",
 		Order:   "desc",
 	}
