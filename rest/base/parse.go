@@ -139,6 +139,8 @@ func NewRequest(ctx context.Context, method, path string, args any) (*http.Reque
 	}
 	if strings.Contains(path, EnginePathPattern) {
 		newReq.Header.Set("X-Presto-User", "admin")
+	}
+	if strings.Contains(path, "api/automation") {
 		newReq.Header.Set("X-Business-Domain", "bd_public")
 	}
 	// 添加认证信息
