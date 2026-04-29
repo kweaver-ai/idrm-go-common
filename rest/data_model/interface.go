@@ -4,6 +4,7 @@ import "context"
 
 type Driven interface {
 	GetDataModelByID(ctx context.Context, ids ...string) ([]*DataModel, error)
+	GetDataModelByIDInternal(ctx context.Context, ids ...string) ([]*DataModel, error)
 }
 
 type DataModel struct {

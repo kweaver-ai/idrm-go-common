@@ -31,3 +31,13 @@ func (d *drivenImpl) GetDataModelByID(ctx context.Context, ids ...string) ([]*dr
 	}
 	return resp, nil
 }
+
+func (d *drivenImpl) GetDataModelByIDInternal(ctx context.Context, ids ...string) ([]*driven.DataModel, error) {
+	path := fmt.Sprintf("/api/internal/mdl-data-model/in/v1/data-views/%s", strings.Join(ids, ","))
+	url := d.baseURL + path
+	resp, err := base.GET[[]*driven.DataModel](ctx, d.httpClient, url, ids)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
