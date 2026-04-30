@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/kweaver-ai/idrm-go-common/middleware"
 	"io"
 	"net/http"
 	"net/url"
@@ -144,7 +145,7 @@ func NewRequest(ctx context.Context, method, path string, args any) (*http.Reque
 		newReq.Header.Set("X-Business-Domain", "bd_public")
 	}
 	if strings.Contains(path, "api/mdl-data-model/in/v1") {
-		interception.SetAccountInfo(ctx, newReq.Header)
+		SetAccountInfo(ctx, newReq.Header)
 	}
 	// 添加认证信息
 	interception.SeAuthorizationIfEmpty(ctx, newReq.Header)
@@ -255,4 +256,13 @@ func isEmptyValue(v reflect.Value) bool {
 		return v.IsZero()
 	}
 	return false
+}
+
+func SetAccountInfo(ctx context.Context, h http.Header) {
+	t, ok := ctx.Value(interception.InfoName).(*middleware.User)
+	if ok {
+		return
+	}
+	h.Set("x-account-type", t.UserTypeString())
+	h.Set("x-account-id", t.ID)
 }

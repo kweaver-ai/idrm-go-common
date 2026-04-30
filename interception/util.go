@@ -3,7 +3,6 @@ package interception
 import (
 	"context"
 	"fmt"
-	"github.com/kweaver-ai/idrm-go-common/middleware"
 	"net/http"
 )
 
@@ -46,13 +45,4 @@ func AuthorizationHeaderMap(ctx context.Context) map[string]string {
 		result[k] = v[0]
 	}
 	return result
-}
-
-func SetAccountInfo(ctx context.Context, h http.Header) {
-	t, ok := ctx.Value(InfoName).(*middleware.User)
-	if ok {
-		return
-	}
-	h.Set("x-account-type", t.UserTypeString())
-	h.Set("x-account-id", t.ID)
 }
