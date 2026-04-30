@@ -21,6 +21,14 @@ func SetGinContextWithUser(c *gin.Context, u *User) {
 	c.Set(contextKeyUser, u)
 }
 
+func GetGinContextWithUser(c context.Context) (*User, error) {
+	user, ok := c.Value(contextKeyUser).(*User)
+	if !ok {
+		return nil, ErrNotExist
+	}
+	return user, nil
+}
+
 // UserFromGinContext 从 Context 获取 User。User 可能是应用或用户。
 func UserFromGinContext(c *gin.Context) (*User, error) {
 	v, exists := c.Get(contextKeyUser)

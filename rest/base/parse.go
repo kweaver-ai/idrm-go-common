@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/kweaver-ai/idrm-go-common/middleware"
 	"io"
 	"net/http"
 	"net/url"
@@ -259,10 +258,20 @@ func isEmptyValue(v reflect.Value) bool {
 }
 
 func SetAccountInfo(ctx context.Context, h http.Header) {
-	t, ok := ctx.Value(interception.InfoName).(*middleware.User)
+	user, err := interception.GetGinContextWithUser(ctx)
+	if err != nil {
+		h.Set("x-account-type", "user")
+		h.Set("x-account-id", "266c6a42-6131-4d62-8f39-853e7093701c")
+		return
+	}
+	userTokenType, ok := ctx.Value(interception.TokenType).(int)
 	if ok {
 		return
 	}
-	h.Set("x-account-type", t.UserTypeString())
-	h.Set("x-account-id", t.ID)
+	userType := "user"
+	if userTokenType != interception.TokenTypeUser {
+		userType = "app"
+	}
+	h.Set("x-account-type", userType)
+	h.Set("x-account-id", user.ID)
 }
