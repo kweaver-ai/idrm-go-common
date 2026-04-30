@@ -143,6 +143,9 @@ func NewRequest(ctx context.Context, method, path string, args any) (*http.Reque
 	if strings.Contains(path, "api/automation") {
 		newReq.Header.Set("X-Business-Domain", "bd_public")
 	}
+	if strings.Contains(path, "api/mdl-data-model/in/v1") {
+		interception.SetAccountInfo(ctx, newReq.Header)
+	}
 	// 添加认证信息
 	interception.SeAuthorizationIfEmpty(ctx, newReq.Header)
 	return newReq, nil

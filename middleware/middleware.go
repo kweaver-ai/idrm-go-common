@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-
 	"github.com/kweaver-ai/idrm-go-common/access_control"
 	"github.com/kweaver-ai/idrm-go-common/rest/user_management"
 )
@@ -35,6 +34,16 @@ type User struct {
 	Name     string                     `json:"name"`
 	UserType int                        `json:"user_type"`
 	OrgInfos []*user_management.DepInfo `json:"org_info"`
+}
+
+func (u *User) UserTypeString() string {
+	if u == nil {
+		return ""
+	}
+	if u.UserType == 0 {
+		return "user"
+	}
+	return "app"
 }
 
 const VirtualEngineApp = "af-virtual-engine-gateway"
