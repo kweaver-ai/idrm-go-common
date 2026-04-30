@@ -65,3 +65,30 @@ func (d drivenImpl) RunInstanceForm(ctx context.Context, id string, body map[str
 	_, err := base.POST[any](ctx, d.httpClient, d.publicPath(uri), args)
 	return err
 }
+
+
+func (d drivenImpl) SharedDagByName(ctx context.Context, name string) (*driven.DagMeta, error) {
+	args := driven.DagListArgs{
+		Keyword: name,
+		Limit:   50,
+		Page:    0,
+		SortBy:  "updated_at",
+		Order:   "desc",
+	}
+	dags, err := d.SharedDagList(ctx, &args)
+	if err != nil {
+		return nil, err
+	}
+	for _, dag := range dags.Dags {
+		if dag.Title == name {
+			return dag, nil
+		}
+	}
+	return nil, errors.New("流程不存在")
+}
+
+
+func (d drivenImpl) SharedDagList(ctx context.Context, req *driven.DagListArgs) (*driven.DagListResp, error) {
+	uri := "/api/automation/v1/shared-dags"
+	return base.GET[*driven.DagListResp](ctx, d.httpClient, d.publicPath(uri), req)
+}

@@ -4,6 +4,7 @@ import "context"
 
 // Driven 对 flow-automation 服务的 REST 包装。
 type Driven interface {
+	SharedDagByName(ctx context.Context, name string) (*DagMeta, error)
 	DagByName(ctx context.Context, name string) (*DagMeta, error)
 	// DagList 获取流程元数据列表。
 	DagList(ctx context.Context, req *DagListArgs) (*DagListResp, error)
@@ -17,7 +18,7 @@ type DagListArgs struct {
 	Keyword string `query:"keyword"`
 	Page    int    `query:"page"`
 	Limit   int    `query:"limit"`
-	SortBy  string `query:"sortby"`
+	SortBy  string `query:"sortBy"`
 	Order   string `query:"order"`
 }
 
