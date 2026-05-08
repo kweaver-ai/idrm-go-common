@@ -15,6 +15,13 @@ func JoinDisplay[T any](operations []string) string {
 	return strings.Join(names, ",")
 }
 
+type ResourceTypeEnum enum.Object
+
+var (
+	ResourceTypeEnumDataView         = enum.New[ResourceTypeEnum](1, "data_view", "数据视图")
+	ResourceTypeEnumKnowledgeNetwork = enum.New[ResourceTypeEnum](2, "knowledge_network", "业务知识网络")
+)
+
 type ViewOperationEnum enum.Object
 
 var (
