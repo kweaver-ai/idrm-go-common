@@ -15,6 +15,21 @@ func JoinDisplay[T any](operations []string) string {
 	return strings.Join(names, ",")
 }
 
+type ViewOperationEnum enum.Object
+
+var (
+	ViewOperationEnumDataQuery     = enum.New[ViewOperationEnum](1, "data_query", "数据查询")
+	ViewOperationEnumViewDetail    = enum.New[ViewOperationEnum](2, "view_detail", "查看")
+	ViewOperationEnumModify        = enum.New[ViewOperationEnum](3, "modify", "修改")
+	ViewOperationEnumDelete        = enum.New[ViewOperationEnum](4, "delete", "删除")
+	ViewOperationEnumCreate        = enum.New[ViewOperationEnum](5, "create", "新建")
+	ViewOperationEnumAuthorize     = enum.New[ViewOperationEnum](6, "authorize", "权限管理")
+	ViewOperationEnumImport        = enum.New[ViewOperationEnum](7, "import", "导入")
+	ViewOperationEnumExport        = enum.New[ViewOperationEnum](8, "export", "导出")
+	ViewOperationEnumRuleManage    = enum.New[ViewOperationEnum](9, "rule_manage", "行列规则管理")
+	ViewOperationEnumRuleAuthorize = enum.New[ViewOperationEnum](10, "rule_authorize", "行列规则授权")
+)
+
 type KNOperationEnum enum.Object
 
 var (
@@ -27,4 +42,14 @@ var (
 	KNOperationEnumImport     = enum.New[KNOperationEnum](7, "import", "导入")
 	KNOperationEnumExport     = enum.New[KNOperationEnum](8, "export", "导出")
 	KNOperationEnumTaskManage = enum.New[KNOperationEnum](9, "task_manage", "任务管理")
+)
+
+type AccessorTypeEnum enum.Object
+
+var (
+	AccessorTypeEnumUser       = enum.New[AccessorTypeEnum](1, "user", "用户")
+	AccessorTypeEnumDepartment = enum.New[AccessorTypeEnum](2, "department", "部门")
+	AccessorTypeEnumGroup      = enum.New[AccessorTypeEnum](3, "group", "用户组")
+	AccessorTypeEnumRole       = enum.New[AccessorTypeEnum](4, "role", "角色")
+	AccessorTypeEnumApp        = enum.New[AccessorTypeEnum](5, "app", "应用")
 )

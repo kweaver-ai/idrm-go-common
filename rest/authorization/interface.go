@@ -9,12 +9,12 @@ type Driven interface {
 	Obligation
 }
 
-const (
-	ACCESSOR_TYPE_USER       = "user"
-	ACCESSOR_TYPE_DEPARTMENT = "department"
-	ACCESSOR_TYPE_GROUP      = "group"
-	ACCESSOR_TYPE_ROLE       = "role"
-	ACCESSOR_TYPE_APP        = "app"
+var (
+	ACCESSOR_TYPE_USER       = AccessorTypeEnumUser.String
+	ACCESSOR_TYPE_DEPARTMENT = AccessorTypeEnumDepartment.String
+	ACCESSOR_TYPE_GROUP      = AccessorTypeEnumGroup.String
+	ACCESSOR_TYPE_ROLE       = AccessorTypeEnumRole.String
+	ACCESSOR_TYPE_APP        = AccessorTypeEnumApp.String
 )
 
 const (
@@ -59,27 +59,6 @@ var InnerBusinessRoles = []string{
 	ROLE_DATA_MANAGER,
 	ROLE_AI_MANAGER,
 	ROLE_APP_MANAGER,
-}
-
-// 数据视图查询操作
-const (
-	VIEW_OPERATION_DATA_QUERY  = "data_query"  // 数据查询
-	VIEW_OPERATION_VIEW_DETAIL = "view_detail" // 查看
-	VIEW_OPERATION_MODIFY      = "modify"      // 修改
-	VIEW_OPERATION_DELETE      = "delete"      // 删除
-)
-
-var viewOperationDisplayMap = map[string]string{
-	VIEW_OPERATION_DATA_QUERY:  "数据查询",
-	VIEW_OPERATION_VIEW_DETAIL: "查看",
-	VIEW_OPERATION_MODIFY:      "修改",
-	VIEW_OPERATION_DELETE:      "删除",
-}
-
-func GetViewOperationDisplay(operations []string) []string {
-	return lo.Map(operations, func(operation string, _ int) string {
-		return viewOperationDisplayMap[operation]
-	})
 }
 
 // innerBusinessRoleMap 内置角色映射
