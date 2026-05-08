@@ -28,13 +28,14 @@ const (
 
 // ResourceType 资源类型
 const (
-	RESOURCE_TYPE_MENUS       = "idrm_menus"                //数据语义治理菜单
-	RESOURCE_SMART_DATA_QUERY = "smart_data_query"          //智能问数
-	RESOURCE_SMART_DATA_FIND  = "smart_data_find"           //智能找数
-	DATA_VIEW_RESOURCE_NAME   = "data_view"                 //视图
-	SUB_VIEW_RESOURCE_NAME    = "data_view_row_column_rule" //视图行列规则
-	API_RESOURCE_NAME         = "idrm_api"                  //API
-	SUB_SERVICE_RESOURCE_NAME = "idrm_api_row_rule"         //API行规则
+	RESOURCE_TYPE_MENUS             = "idrm_menus"                //数据语义治理菜单
+	RESOURCE_SMART_DATA_QUERY       = "smart_data_query"          //智能问数
+	RESOURCE_SMART_DATA_FIND        = "smart_data_find"           //智能找数
+	DATA_VIEW_RESOURCE_NAME         = "data_view"                 //视图
+	SUB_VIEW_RESOURCE_NAME          = "data_view_row_column_rule" //视图行列规则
+	API_RESOURCE_NAME               = "idrm_api"                  //API
+	SUB_SERVICE_RESOURCE_NAME       = "idrm_api_row_rule"         //API行规则
+	KNOWLEDGE_NETWORK_RESOURCE_NAME = "knowledge_network"         //知识网络
 )
 
 // InnerSystemRoles ISF 内置系统角色
