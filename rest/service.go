@@ -26,6 +26,8 @@ import (
 	"github.com/kweaver-ai/idrm-go-common/rest/data_view"
 	data_view_impl "github.com/kweaver-ai/idrm-go-common/rest/data_view/impl"
 	demand_management_impl "github.com/kweaver-ai/idrm-go-common/rest/demand_management/impl"
+	"github.com/kweaver-ai/idrm-go-common/rest/dip_studio"
+	dip_studio_impl "github.com/kweaver-ai/idrm-go-common/rest/dip_studio/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/hydra"
 	hydra_impl "github.com/kweaver-ai/idrm-go-common/rest/hydra/impl"
 	"github.com/kweaver-ai/idrm-go-common/rest/indicator_management"
@@ -69,6 +71,7 @@ type Service struct {
 	SailService            af_sailor_service.Driven
 	UserManagement         user_management.DrivenUserMgnt
 	Authorization          authorization.Driven
+	DipStudio              dip_studio.Driven
 }
 
 // Set 所有rest服务的注入集合
@@ -103,5 +106,6 @@ var Set = wire.NewSet(
 	demand_management_impl.NewDemandManagementDriven,
 	data_model_impl.NewDrivenImpl,
 	bkn_backend_impl.NewDriven,
+	dip_studio_impl.NewDriven,
 	automation_impl.NewDriven,
 )

@@ -140,6 +140,7 @@ type ServiceConfig struct {
 	AuthorizationPublicHost  string `env:"AUTHORIZATION_PUBLIC_HOST" host:"authorization-public:30920"`
 	AuthorizationPrivateHost string `env:"AUTHORIZATION_PRIVATE_HOST" host:"authorization-private:30920"`
 	StudioWebServiceHost     string `env:"STUDIO_WEB_SERVICE_HOST" host:"studio-web-service:8877"`
+	DipStudioHost            string `env:"DIP_STUDIO_HOST" host:"dip-studio:3000"`
 	MDLDataModelServiceHost  string `env:"MDL_DATA_MODEL_SERVICE_HOST" host:"mdl-data-model-svc:13020"`
 	BKNBackendHost           string `env:"BKN_BACKEND_HOST" host:"bkn-backend-svc:13014"`
 	AutomationPublicHost     string `env:"AUTOMATION_PUBLIC_HOST" host:"flow-automation:8680"`
