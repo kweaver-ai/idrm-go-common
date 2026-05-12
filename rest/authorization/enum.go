@@ -51,6 +51,12 @@ var (
 	KNOperationEnumTaskManage = enum.New[KNOperationEnum](9, "task_manage", "任务管理")
 )
 
+type SubViewOperationEnum enum.Object
+
+var (
+	SubViewOperationEnumRuleApply = enum.New[SubViewOperationEnum](1, "rule_apply", "规则应用")
+)
+
 type AccessorTypeEnum enum.Object
 
 var (
