@@ -143,7 +143,7 @@ func NewRequest(ctx context.Context, method, path string, args any) (*http.Reque
 	if strings.Contains(path, "api/automation") {
 		newReq.Header.Set("X-Business-Domain", "bd_public")
 	}
-	if strings.Contains(path, "api/mdl-data-model/in/v1") {
+	if strings.Contains(path, "/api/mdl-data-model/") || strings.Contains(path, "/api/ontology-manager/") {
 		SetAccountInfo(ctx, newReq.Header)
 	}
 	// 添加认证信息

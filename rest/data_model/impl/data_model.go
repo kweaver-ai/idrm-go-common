@@ -11,7 +11,7 @@ import (
 	driven "github.com/kweaver-ai/idrm-go-common/rest/data_model"
 )
 
-const pathInDataViewRowColumnRules = "/api/mdl-data-model/in/v1/data-view-row-column-rules"
+const pathInDataViewRowColumnRules = "/api/mdl-data-model/v1/data-view-row-column-rules"
 
 type drivenImpl struct {
 	baseURL    string
@@ -93,12 +93,12 @@ func (d *drivenImpl) CreateDataViewRowColumnRulesInternal(ctx context.Context, r
 }
 
 type updateDataViewRowColumnRuleArgs struct {
-	RuleID     string `uri:"rule_id"`
-	Name       string `json:"name"`
-	ViewID     string `json:"view_id"`
-	Tags       []string          `json:"tags,omitempty"`
-	Comment    string            `json:"comment,omitempty"`
-	Fields     []string          `json:"fields,omitempty"`
+	RuleID     string                   `uri:"rule_id"`
+	Name       string                   `json:"name"`
+	ViewID     string                   `json:"view_id"`
+	Tags       []string                 `json:"tags,omitempty"`
+	Comment    string                   `json:"comment,omitempty"`
+	Fields     []string                 `json:"fields,omitempty"`
 	RowFilters *driven.RowColumnCondCfg `json:"row_filters,omitempty"`
 }
 
