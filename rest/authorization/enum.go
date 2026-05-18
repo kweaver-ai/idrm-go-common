@@ -18,8 +18,9 @@ func JoinDisplay[T any](operations []string) string {
 type ResourceTypeEnum enum.Object
 
 var (
-	ResourceTypeEnumDataView         = enum.New[ResourceTypeEnum](1, "data_view", "数据视图")
-	ResourceTypeEnumKnowledgeNetwork = enum.New[ResourceTypeEnum](2, "knowledge_network", "业务知识网络")
+	ResourceTypeEnumDataView              = enum.New[ResourceTypeEnum](1, "data_view", "数据视图")
+	ResourceTypeEnumKnowledgeNetwork      = enum.New[ResourceTypeEnum](2, "knowledge_network", "业务知识网络")
+	ResourceTypeEnumDataViewRowColumnRule = enum.New[ResourceTypeEnum](3, "data_view_row_column_rule", "数据视图行列规则")
 )
 
 type ViewOperationEnum enum.Object

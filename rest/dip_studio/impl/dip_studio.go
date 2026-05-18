@@ -31,6 +31,32 @@ func NewDriven(httpClient *http.Client) driven.Driven {
 	}
 }
 
+// ListDigitalHumans GET /api/dip-studio/v1/digital-human
+func (d *drivenImpl) ListDigitalHumans(ctx context.Context) ([]*driven.DigitalHumanDetail, error) {
+	path := d.baseURL + "/api/dip-studio/v1/digital-human"
+	resp, err := base.GET[[]*driven.DigitalHumanDetail](ctx, d.httpClient, path, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+// GetDigitalHumanDetail GET /api/dip-studio/v1/digital-human/{id}
+func (d *drivenImpl) GetDigitalHumanDetail(ctx context.Context, digitalHumanID string) (*driven.DigitalHumanDetail, error) {
+	if strings.TrimSpace(digitalHumanID) == "" {
+		return nil, errorcode.Detail(errorcode.BadRequestError, "digitalHumanID 不能为空")
+	}
+	path := d.baseURL + "/api/dip-studio/v1/digital-human/:id"
+	detail, err := base.GET[*driven.DigitalHumanDetail](ctx, d.httpClient, path, digitalHumanPathArgs{ID: digitalHumanID})
+	if err != nil {
+		return nil, err
+	}
+	if detail == nil {
+		return nil, errorcode.Detail(errorcode.BadRequestError, "获取数字员工详情为空响应")
+	}
+	return detail, nil
+}
+
 func bknDedupeKey(e driven.BknEntry) string {
 	u := strings.TrimSpace(e.URL)
 	n := strings.TrimSpace(e.Name)
@@ -85,16 +111,13 @@ func (d *drivenImpl) AddDigitalHumanKnowledgeNetwork(ctx context.Context, digita
 		}
 	}
 
-	path := d.baseURL + "/api/dip-studio/v1/digital-human/:id"
-	detail, err := base.GET[*driven.DigitalHumanDetail](ctx, d.httpClient, path, digitalHumanPathArgs{ID: digitalHumanID})
+	detail, err := d.GetDigitalHumanDetail(ctx, digitalHumanID)
 	if err != nil {
 		return nil, err
 	}
-	if detail == nil {
-		return nil, errorcode.Detail(errorcode.BadRequestError, "获取数字员工详情为空响应")
-	}
 
 	merged := mergeBkn(detail.Bkn, entries)
+	path := d.baseURL + "/api/dip-studio/v1/digital-human/:id"
 	updated, err := base.PUT[*driven.DigitalHumanDetail](ctx, d.httpClient, path, updateDigitalHumanBknArgs{
 		ID:  digitalHumanID,
 		Bkn: merged,
